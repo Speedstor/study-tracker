@@ -3,7 +3,7 @@
  */
 
 import { courseSessionKey, createCourseURL, sessionPageURL } from "./constants.js";
-import { getUserId, getUserToken } from "./login.js";
+// import { getUserToken } from "./login.js";
 
 function displayCourses() {
     let courses = ["Course 1", "Course 2", "Course 3"];
@@ -81,5 +81,5 @@ window.onCourseClick = onCourseClick
 window.onAddCourseClick = onAddCourseClick
 window.createCourse = createCourse
 window.closeCourseModal = closeCourseModal
-window.onload = getUserToken
+// window.onload = getUserToken
 

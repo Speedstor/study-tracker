@@ -128,4 +128,3 @@ function navigateToHomepage() {
 // Give the functions global scope in the HTML file
 window.createAccount = createAccount;
 window.login = login;
-window.getUserCookie = getUserToken

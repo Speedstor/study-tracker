@@ -2,7 +2,7 @@
  * Event handlers for the study session (timer)
  */
 
-import { endSessionURL, homepageURL, startSessionURL } from "./constants";
+import { endSessionURL, homepageURL, startSessionURL } from "./constants.js";
 
 {
     var timerIntervalId = 0; // id of the timer, used to stop the timer
@@ -37,7 +37,7 @@ function startSession() {
 
     // Set the target time
     // const timeInSeconds = 60 * 25; // 25 minutes
-    const timeInSeconds = 3;
+    const timeInSeconds = 60 * 25;
     var timeRemaining = timeInSeconds;
 
     // Set the update frequency (in ms)
@@ -69,7 +69,7 @@ function startSession() {
 
 function notifySessionStarted() {
     var params = "sessionStarted=1"
-    const req = XMLHttpRequest();
+    const req = new XMLHttpRequest();
     const url = startSessionURL;
     req.open("POST", url);
     req.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
@@ -89,14 +89,17 @@ function notifySessionStarted() {
  * the timer.
  */
 function endSession() {
+    console.log("in endSession()")
+    console.log("timerInervalId = " + timerIntervalId)
+
     // If the timer has not yet been called (i.e. the id == 0), do nothing. Otherwise,
     // stop the timer and notify the server
     if (timerIntervalId != 0) {
-        // Reset the timer interval id
-        resetTimerIntervalId();
-
         // Stop the timer
         clearInterval(timerIntervalId);
+
+        // Reset the timer interval id
+        resetTimerIntervalId();
 
         // Notify the server that the session has ended.
         notifySessionEnded()
@@ -108,7 +111,7 @@ function endSession() {
 
 function notifySessionEnded() {
     var params = "sessionEnded=1"
-    const req = XMLHttpRequest();
+    const req = new XMLHttpRequest();
     const url = endSessionURL;
     req.open("POST", url);
     req.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
@@ -128,3 +131,6 @@ function notifySessionEnded() {
 function resetTimerIntervalId() {
     timerIntervalId = 0;
 }
+
+window.startSession = startSession
+window.endSession = endSession
