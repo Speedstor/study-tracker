@@ -102,6 +102,26 @@
             </div>
         </div>
     </div>
+
+
+
+<h1>Your Courses</h1>
+{% if courses %}
+    <ul>
+    {% for c in courses %}
+        <li><a href="/courses/{{ c.id }}/">{{ c.course_name }}</a></li>
+    {% endfor %}
+    </ul>
+{% else %}
+    <p>You have no courses yet.</p>
+{% endif %}
+
+<br>
+<a class="btn btn-primary" href="{% url 'courses:add_course' %}">Add a course</a>
+<br>
+<a class="btn btn-primary" href="{% url 'courses:start_study_session' %}">Start a study session</a>
+
+
 </body>
 
 <script>

@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Study Session</title>
+</head>
+<body>
+
+<h1>{{ courseName }}</h1>
+<p id="courseIdElem">{{ courseId }}</p>
+
+{%  load static %}
+<script src="{% static 'courses/session.js' %}" type="module"></script>
+<p id="timerElement" style="text-align:center;">This text is where the timer countdown should be.</p>
+<br>
+<button onclick="endSession()">End session</button>
+
+</body>
+</html>
