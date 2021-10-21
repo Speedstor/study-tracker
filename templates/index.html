@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="styles.css">
+    <script type="module" src="constants.js"></script>
+    <script type="module" src="login.js"></script>
+    <script type="module" src="homepage.js"></script>
+    <title>Home page</title>
+</head>
+<body>
+<h1>
+    Time Logging App
+</h1>
+
+<button type="button" onclick="onCourseClick()">
+    An existing course
+</button>
+
+<br>
+<br>
+
+<button type="button" onclick="onAddCourseClick()">
+    Add a course
+</button>
+
+<div id="addCourseModal" class="modal">
+    <div class="modalContent">
+        <span id="closeModal" class="close" onclick="closeCourseModal()">&times;</span>
+        <h1 style="text-align:center">Add a Course</h1>
+        <br>
+        <br>
+        <label for="courseName">Course Name</label>
+        <br>
+        <input type="text" id="courseName" name="courseName">
+        <br>
+        <br>
+        <button onclick="createCourse()">Create course</button>
+    </div>
+</div>
+</body>
+</html>

@@ -18,8 +18,10 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import include, path
 from courses.views import course
+from dashboard.views import dashboard
 admin.site.header = "hello spongebob"
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('courses/', course, name = 'courses'),
+    path("", dashboard)
 ]
