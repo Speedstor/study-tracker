@@ -1,44 +1,224 @@
+{% load static %}
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="styles.css">
-    <script type="module" src="constants.js"></script>
-    <script type="module" src="login.js"></script>
-    <script type="module" src="homepage.js"></script>
-    <title>Home page</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Study Tracker (UCSD)</title>
+    <meta name="description" content="Track time used for studying">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/header.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/footer.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/main.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/index.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/copied-billboard.css' %}">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
+    <script type="text/javascript" src="{% static 'js/billboard.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/billboard.pkgd.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/billboard.pkgd.js' %}"></script>
 </head>
-<body>
-<h1>
-    Time Logging App
-</h1>
 
-<button type="button" onclick="onCourseClick()">
-    An existing course
-</button>
+<nav style="border-bottom: 1px solid grey; display: flex; height: 63px; width: 100vw; box-sizing: border-box; padding: 0px 20px; background: white; align-items: center; justify-content: center;">
+    <h3 class="tempLogo">Study Tracker</h3>
+    <div style="flex-grow: 3;"></div>
+    <button class="btn btn-green">Login</button>
+</nav>
 
-<br>
-<br>
+<body style="margin: 0px; ">
+    <div style="display: flex; flex-direction: row;">
+        <div style="display: flex; flex-direction: column; width: 192px; height: calc(100vh - 63px); background: rgb(141, 141 ,141);">
+            <a class="sideBarLink"><span class="icon-emoji">🎰</span> Dashboard</a>
+            <a class="sideBarLink"><span class="icon-emoji">⛳</span> Start Session</a>
+            <a class="sideBarLink"><span class="icon-emoji">📈</span> Analytics</a>
+            <a class="sideBarLink"><span class="icon-emoji">⚙</span> Settings</a>
+            <div style="flex-grow: 3;"></div>
+            <div class="box" style="background: white; margin: 10px;">
+                <div class="box-margin">
+                    <h4 style="margin: 0px;">Aldrin Cheung</h4>
+                    <p class="sub" style="padding: 0px;">talk to yourself <span class="info-pop" style="">i</span></p>
+                    <div class="divider"></div>
+                    <div class="spacer"></div>
+                    <p>Hello, Aldrin. What do you want to accomplish today? What goal do you have in mind?</p>
+                </div>
+            </div>
+        </div>
 
-<button type="button" onclick="onAddCourseClick()">
-    Add a course
-</button>
 
-<div id="addCourseModal" class="modal">
-    <div class="modalContent">
-        <span id="closeModal" class="close" onclick="closeCourseModal()">&times;</span>
-        <h1 style="text-align:center">Add a Course</h1>
-        <br>
-        <br>
-        <label for="courseName">Course Name</label>
-        <br>
-        <input type="text" id="courseName" name="courseName">
-        <br>
-        <br>
-        <button onclick="createCourse()">Create course</button>
+        <div style="flex-grow: 20; /* display: flex; flex-direction: column; */ overflow-x: hidden;">
+            <div class="" style="display: grid; grid-template-columns: 14px auto 14px; grid-template-rows: 14px auto 14px; width: 100%; position: relative; left: 0; top: 100px;">
+                <div style="background: url(./src/top\ left.png); grid-column: 1; grid-row: 1; background-size: 100% 100%;"></div>
+                <div style="background: url(./src/top.png); grid-column: 2; grid-row: 1; background-size: 100% 100%;"></div>
+                <div style="background: url(./src/top\ right.png); grid-column: 3; grid-row: 1; background-size: 100% 100%;"></div>
+                <div style="background: url(./src/left.png); grid-column: 1; grid-row: 2; background-size: 100% 100%;"></div>
+                <div style="padding: 13px; grid-column: 2; grid-row: 2; background: #fbfbfb; display: flex; flex-direction: row;">
+                    <ul class="control-group" style="width: 180px; list-style-type: none; padding-left: 20px;">
+
+                        <label class="control control-checkbox">
+                            CAT 1
+                                <input type="checkbox" checked="checked" />
+                            <div class="control_indicator"></div>
+                        </label>
+                        <label class="control control-checkbox">
+                            CSE 11
+                                <input type="checkbox" checked="checked" />
+                            <div class="control_indicator"></div>
+                        </label>
+                        <label class="control control-checkbox">
+                            MATH 18
+                                <input type="checkbox" checked="checked" />
+                            <div class="control_indicator"></div>
+                        </label>
+                        <label class="control control-checkbox">
+                            MATH 20c
+                                <input type="checkbox" checked="checked" />
+                            <div class="control_indicator"></div>
+                        </label>
+                        <div class="btn-group" role="group">
+                            <input onchange="showToday()" type="radio" class="btn-check" name="btnradio" id="btnradio1" autocomplete="off" checked>
+                            <label class="btn btn-outline-primary btn-sm" for="btnradio1">Today</label>
+                          
+                            <input onchange="showWeek()" type="radio" class="btn-check" name="btnradio" id="btnradio3" autocomplete="off">
+                            <label class="btn btn-outline-primary btn-sm" for="btnradio3">This Week</label>
+                          </div>
+                    </ul>
+                    <div style="display: flex; justify-content: space-around; flex-grow: 3;">
+                        <div class="box" id="graphWeek" style="margin-right: 40px; padding: 10px 16px 0px 0px; display: flex; flex-direction: column;">
+                            <h4 class="no-margin center">This week</h4>
+                            <div id="weekChart" style="height: 250px; width: 600px;"></div>
+                        </div>
+                        <div class="box" id="graphToday" style="padding: 10px 16px 0px 0px; display: flex; flex-direction: column;">
+                            <h4 class="no-margin center">Today</h4>
+                            <div id="timeSpent" style="height: 250px; width: 600px;"></div>
+                        </div>
+                    </div>
+                </div>
+                <div style="background: url(./src/right.png); grid-column: 3; grid-row: 2; background-size: 100% 100%;"></div>
+                <div style="background: url(./src/bottom\ left.png); grid-column: 1; grid-row: 3; background-size: 100% 100%;"></div>
+                <div style="background: url(./src/bottom.png); grid-column: 2; grid-row: 3; background-size: 100% 100%;"></div>
+                <div style="background: url(./src/bottom\ right.png); grid-column: 3; grid-row: 3; background-size: 100% 100%;"></div>
+            </div>
+            <div class="" style="background:rgb(141, 141 ,141); width: 300px; height: 200px; position: absolute; bottom: 0px; right: 0px;">
+            </div>
+        </div>
     </div>
-</div>
 </body>
+
+<script>
+    function showToday(){
+        document.getElementById("graphWeek").style.display = "block";
+        document.getElementById("graphToday").style.display = "none";
+    }
+    function showWeek(){
+        document.getElementById("graphWeek").style.display = "none";
+        document.getElementById("graphToday").style.display = "block";
+    }
+
+    window.addEventListener("load", () => {
+        console.log("hge");
+        var chart = bb.generate({
+        data: {
+            columns: [
+            ["CAT 1", 0, 2.00, 2.00, 4.00, 0, 2.50, .10, .10],
+            ["math 18", 1.30, 1.00, 0, 2.00, 0, 5.0, .10, .10],
+            ["MATH 20c", 0, 2.00, 2.00, 0, 2.50, 2.50, 10, .10],
+            ["cse 11", 1.30, 1.00, 0, 2.00, 0, 5.0, 1.0, .10],
+            ["total", 2.80, 6.00, 4.00, 8.00, 2.30, 6.00, .40, .40]
+            ],
+            type: "bar", // for ESM specify as: bar()
+            types: {
+                "total": "spline"
+            },
+            groups: [
+            ["CAT 1",
+        "math 18",
+        "MATH 20c",
+        "cse 11",
+            ]
+            ],
+        colors:{
+        },
+        },
+        grid: {
+            y: {
+            lines: [
+                {
+                value: 0
+                }
+            ]
+            }
+        },
+        bindto: "#weekChart"
+        });
+
+        
+        var chart = bb.generate({
+        data: {
+            order: null,
+            columns: [
+            ["transparent0", 10, 9, 10.5, 11],
+            ["gap1", 0, 2.00, 2.00, 4.00],
+            ["transparent1", 1.30, 1.00, 0, 2.00],
+            ["gap3", 0, 2.00, 2.00, 0],
+            ["gap4", 1.30, 1.00, 0, 2.00],
+            ["transparent2", 1.30, 1.00, 0, 2.00],
+            ["gap5", 1.30, 1.00, 0, 2.00],
+            ["transparent3", 5, 1.00, 0, 2.00],
+            ],
+            type: "bar", // for ESM specify as: bar()
+            groups: [
+            ["gap1",
+             "gap2",
+             "gap3",
+             "gap4",
+             "gap5",
+             "transparent1",
+             "transparent2",
+             "transparent3",
+             "transparent0",
+            ]
+            ],
+        colors:{
+            "transparent1": "#00000000",
+            "transparent2": "#00000000",
+            "transparent3": "#00000000",
+            "transparent0": "#00000000",
+        },
+        },
+        grid: {
+            y: {
+            lines: [
+                {
+                value: 0
+                }
+            ]
+            }
+        },
+        axis:{
+            rotated: true,
+            x:{
+                type: "category",
+                categories: [
+                    "cat1",
+                    "math 18",
+                    "cse 11",
+                    "math 20c",
+                ]
+            },
+        },
+        legend: {
+            show: false
+        },
+        bindto: "#timeSpent"
+        });
+
+
+
+    })
+</script>
+
 </html>
+
+
+
+

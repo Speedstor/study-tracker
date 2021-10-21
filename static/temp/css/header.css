@@ -1,0 +1,125 @@
+#main-navBar{
+    height: 72px;
+    width: 100%;
+    box-sizing: border-box;
+    background: rgba(255, 255, 255, 1);
+    box-shadow: 0 1px 8px 0px rgba(0,0,0,0.14);
+    padding: 0px 25px;
+    position: absolute;
+}
+
+*{
+    font-family: sans-serif;
+}
+
+.desktopHeader{
+    width: 100%; 
+    height: 100%; 
+    display: flex;
+}
+
+.headerlogolink{
+    text-decoration: none; color: inherit; cursor: context-menu !important; height: 100%; padding: 0px; margin: 0px; display: flex; align-items: baseline;
+    margin-right: 20px;
+    align-items: flex-end;
+}
+
+.headerlogolink:hover{
+    cursor: pointer !important;
+    
+}
+
+
+.tempLogo{
+    display: inline-block; font-weight: 500; font-size: 24px; margin: 0px; margin-bottom: 6px; text-align: left;
+}
+
+a, .btn{
+    color: rgb(49, 133, 189);
+}
+a, .btn:hover{
+    color: rgb(38, 111, 160);
+}
+a, .btn:focus{
+    color: rgb(23, 93, 139);
+}
+a, .btn :visited{
+    color: rgb(24, 93, 139);
+}
+
+.headerlink{
+    position: relative;
+    vertical-align: text-bottom;
+    padding: 4px 7px 2px 7px;
+    margin: 0px 3px;
+    height: 18px;
+    font-size: normal;
+    top: 100%;
+    margin-top: -25px;
+    border-style: solid;
+    border-width: 1px 1px 0px 1px;
+    border-radius: 4px 4px 0px 0px;
+    border-color: black;
+}
+
+.btn{
+    padding: 5px 10px; 
+    border: 1px rgb(75, 75, 75) solid;
+    border-radius: 5px;
+    text-decoration: underline;
+}
+
+.btn:hover{
+    background: rgba(102, 164, 206, 0.26);
+}
+
+.btn:focus{
+    background: rgba(28, 76, 107, 0.288);
+}
+
+.btn-small{
+    font-size: small;
+    height: 13px;
+    padding: 5px 7px;
+}
+
+.btn-tight{
+    width: unset;
+    height: unset;
+    padding: 0px;
+    margin: 0px;
+}
+
+.btn-green{
+    color: rgb(28, 156, 28);
+}
+.btn-green:hover{
+    color: rgb(21, 131, 21);
+}
+.btn-green:focus{
+    color: rgb(4, 90, 4);
+}
+.btn-green:visited{
+    color: rgb(16, 116, 16);
+}
+
+.b-red{
+    background: rgb(248, 174, 174);
+    color: black;
+}
+
+.b-blue{
+    background: rgb(174, 191, 248);
+    color: black;
+}
+
+.b-green{
+    background: rgb(184, 231, 184);
+    color: black;
+}
+
+.headerSearch{
+    width: 230px;
+    text-decoration: none;
+    color: black;
+}
