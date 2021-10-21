@@ -47,10 +47,10 @@
 
         <div style="flex-grow: 20; /* display: flex; flex-direction: column; */ overflow-x: hidden;">
             <div class="" style="display: grid; grid-template-columns: 14px auto 14px; grid-template-rows: 14px auto 14px; width: 100%; position: relative; left: 0; top: 100px;">
-                <div style="background: url(./src/top\ left.png); grid-column: 1; grid-row: 1; background-size: 100% 100%;"></div>
-                <div style="background: url(./src/top.png); grid-column: 2; grid-row: 1; background-size: 100% 100%;"></div>
-                <div style="background: url(./src/top\ right.png); grid-column: 3; grid-row: 1; background-size: 100% 100%;"></div>
-                <div style="background: url(./src/left.png); grid-column: 1; grid-row: 2; background-size: 100% 100%;"></div>
+                <div style="background: url({% static 'src/top left.png' %}); grid-column: 1; grid-row: 1; background-size: 100% 100%;"></div>
+                <div style="background: url({% static 'src/top.png' %}); grid-column: 2; grid-row: 1; background-size: 100% 100%;"></div>
+                <div style="background: url({% static 'src/top right.png' %}); grid-column: 3; grid-row: 1; background-size: 100% 100%;"></div>
+                <div style="background: url({% static 'src/left.png' %}); grid-column: 1; grid-row: 2; background-size: 100% 100%;"></div>
                 <div style="padding: 13px; grid-column: 2; grid-row: 2; background: #fbfbfb; display: flex; flex-direction: row;">
                     <ul class="control-group" style="width: 180px; list-style-type: none; padding-left: 20px;">
 
@@ -93,10 +93,10 @@
                         </div>
                     </div>
                 </div>
-                <div style="background: url(./src/right.png); grid-column: 3; grid-row: 2; background-size: 100% 100%;"></div>
-                <div style="background: url(./src/bottom\ left.png); grid-column: 1; grid-row: 3; background-size: 100% 100%;"></div>
-                <div style="background: url(./src/bottom.png); grid-column: 2; grid-row: 3; background-size: 100% 100%;"></div>
-                <div style="background: url(./src/bottom\ right.png); grid-column: 3; grid-row: 3; background-size: 100% 100%;"></div>
+                <div style="background: url({% static 'src/right.png' %}); grid-column: 3; grid-row: 2; background-size: 100% 100%;"></div>
+                <div style="background: url({% static 'src/bottom left.png' %}); grid-column: 1; grid-row: 3; background-size: 100% 100%;"></div>
+                <div style="background: url({% static 'src/bottom.png' %}); grid-column: 2; grid-row: 3; background-size: 100% 100%;"></div>
+                <div style="background: url({% static 'src/bottom right.png' %}); grid-column: 3; grid-row: 3; background-size: 100% 100%;"></div>
             </div>
             <div class="" style="background:rgb(141, 141 ,141); width: 300px; height: 200px; position: absolute; bottom: 0px; right: 0px;">
             </div>
