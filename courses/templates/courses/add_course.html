@@ -1,14 +1,11 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Add Course</title>
-</head>
-<body>
-    <form action="{% url 'courses:add_course' %}" method="post">
-        {% csrf_token %}
-        {{ form }}
-        <input type="submit" value="Add course">
-    </form>
-</body>
-</html>
+{% extends 'base.html' %}
+{% load static %}
+{% block page-title %}Add Course{% endblock %}
+{% block content %}
+{% include 'partials/_sidebar.html' %}
+<form action="{% url 'courses:add_course' %}" method="post">
+    {% csrf_token %}
+    {{ form }}
+    <input type="submit" value="Add course">
+</form>
+{% endblock %}
