@@ -194,6 +194,17 @@ li.remarks{
     justify-content: flex-end;
 }
 
+.hover-pointer:hover{
+    cursor: pointer;
+}
+.hover-grab:hover{
+    cursor: grab;
+}
+
+.hover-grab:active:hover{
+    cursor: grabbing;
+}
+
 .topic-tips li{
     margin-bottom: 6px;
 }

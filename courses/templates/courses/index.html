@@ -11,10 +11,10 @@
 </div>
 
 <div style="position: absolute; width: 100%; height: 100%; padding: 0px 30px;">
-    <div class="" style="display: grid; grid-template-columns: 14px auto 14px; grid-template-rows: 14px auto 14px; width: 100%; margin-top: 100px;">
+    <div class="" id="whiteboard" style="display: grid; grid-template-columns: 14px auto 14px; grid-template-rows: 14px auto 14px; width: 100%; margin-top: 100px;">
         {% include 'partials/_preWhiteboard.html' %}
 
-            <div style="padding: 13px; grid-column: 2; grid-row: 2; background: #fbfbfb; display: flex; flex-direction: row;">
+            <div style="padding: 13px; grid-column: 2; grid-row: 2; background: #fbfbfb; display: flex; flex-direction: row; position: relative;">
                 <div style="display: flex; flex-wrap: wrap; flex-direction: column; padding: 8px;">
                     {% if courses %}
                         <ul class="control-group" style="width: 180px; list-style-type: none; padding-left: 0px; margin: 0px;">
@@ -54,6 +54,7 @@
                         <div id="timeSpent" style="height: 100%;"></div>
                     </div>
                 </div>
+                <div class="hover-grab" id="moveWhiteboard" style="position: absolute; bottom: -4px; right: 2px;"><p class="sub">✊ drag to move</p></div>
             </div>
 
         {% include 'partials/_postWhiteboard.html' %}
