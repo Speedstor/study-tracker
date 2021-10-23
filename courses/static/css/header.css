@@ -67,6 +67,7 @@ a, .btn :visited{
     border: 1px rgb(75, 75, 75) solid;
     border-radius: 5px;
     text-decoration: underline;
+    background: transparent;
 }
 
 .btn:hover{
