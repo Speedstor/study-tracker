@@ -39,12 +39,18 @@ window.addEventListener("mousemove", (e) =>{
         // circle.style.top = e.pageY + 'px';
         let setMarginTop = e.pageY - document.getElementById("moveWhiteboard").offsetTop - 100;
         console.log(setMarginTop);
-        if(setMarginTop > -481) document.getElementById("whiteboard").style.marginTop = setMarginTop + "px";
+        if(setMarginTop > - document.getElementById("whiteboard").clientHeight + 50) document.getElementById("whiteboard").style.marginTop = setMarginTop + "px";
     }
   })
 
   window.addEventListener("mouseup", (e) => {
     window.ifMoveWhiteboard = false;
+  })
+  window.addEventListener("resize", () => {
+    setTimeout(function(){
+        let margin = eval(document.getElementById("whiteboard").style.marginTop) ;
+        if( margin < -document.getElementById("whiteboard").clientHeight + 50) document.getElementById("whiteboard").style.marginTop =  -document.getElementById("whiteboard").clientHeight + 50 + "px";
+    }, 200);
   })
 
 

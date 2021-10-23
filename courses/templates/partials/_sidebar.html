@@ -1,14 +1,16 @@
+{% load static %}
+<script type="text/javascript" src="{% static 'js/sidebar.js' %}"></script>
 <div style="display: flex; flex-direction: column; width: 192px; height: calc(100vh - 63px); background: rgb(141, 141 ,141);">
-    <a class="sideBarLink"><span class="icon-emoji">🎰</span> Dashboard</a>
+    <a class="sideBarLink" href="{% url 'courses:index' %}"><span class="icon-emoji">🎰</span> Dashboard</a>
     <a class="sideBarLink"><span class="icon-emoji">⛳</span> Start Session</a>
     <a class="sideBarLink"><span class="icon-emoji">📈</span> Analytics</a>
     <a class="sideBarLink"><span class="icon-emoji">⚙</span> Settings</a>
     <div style="flex-grow: 3;"></div>
     <div class="box" style="background: white; margin: 10px;">
         <ul style="list-style-type: none;">
-        <li>wpm: 99wpm</li>
-        <li>time spent: 4h</li>
-        <li>increase: 20%</li>
+            <li>wpm: 99wpm</li>
+            <li>time spent: 4h</li>
         </ul>
+        <div id="increaseGauge"></div>
     </div>
 </div>
