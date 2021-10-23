@@ -44,6 +44,8 @@ def add_course(request):
     context = {'form': form}
     return render(request, 'courses/add_course.html', context=context)
 
+def list(request):
+    return HttpResponse("list courses and edit them");
 
 def start_study_session(request):
     # Get all of the courses to display in the <select> dropdown
