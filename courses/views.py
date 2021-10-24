@@ -21,7 +21,8 @@ def detail(request, course_id):
     total_time = 0
     for s in sessions:
         total_time += s.duration
-    return HttpResponse(f'You are looking at course {course.course_name}. You have spent {total_time} minutes studying for this course.')
+    context = {'tempString': f'You are looking at course {course.course_name}. You have spent {total_time} minutes studying for this course.'}
+    return render(request, 'courses/placeholder.html', context=context)
 
 
 def add_course(request):

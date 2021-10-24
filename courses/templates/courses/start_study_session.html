@@ -1,10 +1,10 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Start Study Session</title>
-</head>
-<body>
+{% extends 'base.html' %}
+{% load static %}
+{% block page-title %}Start Study Session{% endblock %}
+{% block content %}
+{% include 'partials/_sidebar.html' %}
+
+<div style="padding: 30px;">
 <h1>Select a course to study for:</h1>
 {% if courses %}
     <form action="{% url 'courses:session' %}" method="post">
@@ -29,5 +29,6 @@
 {% else %}
     <p>You don't have any courses yet. Create a course on your home page first.</p>
 {% endif %}
-</body>
-</html>
+
+</div>
+{% endblock %}

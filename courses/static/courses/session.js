@@ -24,6 +24,7 @@ const homeURL = "http://localhost:8000/courses/";
     }
 }
 
+
 /**
  * Called when a session is started. Displays a countdown timer to the user. Stops the timer
  * when it reaches 0.

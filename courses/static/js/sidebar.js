@@ -4,7 +4,7 @@ window.addEventListener("load", () => {
   var chart = bb.generate({
     data: {
       columns: [
-    ["data", 91.4]
+    ["increased", 91.4]
       ],
       type: "gauge", // for ESM specify as: gauge()
       onclick: function(d, i) {

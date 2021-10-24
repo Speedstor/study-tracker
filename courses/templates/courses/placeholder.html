@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block page-title %}Add Course{% endblock %}
+{% block content %}
+{% include 'partials/_sidebar.html' %}
+
+<div style="padding: 30px;">
+    {% if tempString %}
+        <h3>{{ tempString }}</h3>
+    {% endif %}
+</div>
+{% endblock %}
