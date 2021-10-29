@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from django.urls import reverse
 from django.utils import timezone
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 
 from .models import Course, StudySession
@@ -10,7 +10,6 @@ from .forms import CourseForm, StudySessionForm
 
 # View for the home page
 def index(request):
-    print('in function index')
     courses = Course.objects.all()
     context = {'courses': courses}
     return render(request, 'courses/index.html', context=context)
@@ -99,13 +98,13 @@ def session(request):
                 study_session = StudySession.objects.get(pk=request.session['session_id'])
                 end_date = study_session.start_date + timezone.timedelta(seconds=sec_elapsed)
                 study_session.end_date = end_date
-                study_session.duration = (study_session.end_date - study_session.start_date).seconds // 60
+                study_session.set_duration()
                 study_session.save()
 
-                # Return user to home page
-                return HttpResponseRedirect('/courses/')
+                # Return user to home page - JavaScript will handle this
+                redirect_url = reverse('courses:index')
+                return JsonResponse(status=302, data={'redirectURL': redirect_url})
             else:
                 print('sessionStatus unrecognized: ', session_status)
-
 
     return render(request, 'courses/session.html')
