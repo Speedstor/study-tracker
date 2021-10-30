@@ -18,6 +18,7 @@ def index(request):
     now = datetime.utcnow();
     jsData = {
         "study_sessions": {},
+        "courses": serializers.serialize("json", courses),
     }
     for c in courses:
         jsData["study_sessions"][c.id] = {
@@ -100,7 +101,6 @@ def session(request):
     study_session_end_timeout = 90
     study_session_end_force_set_ping_wiggle_room = 12
 
-    print(timezone.localtime(timezone.now()) + timezone.timedelta(minutes=10))
     try:
         last_study_session = StudySession.objects.latest('start_date')
         if last_study_session.start_date.strftime('%Y-%m-%d %H:%M:%S') == last_study_session.end_date.strftime('%Y-%m-%d %H:%M:%S'):
@@ -121,7 +121,6 @@ def session(request):
 
     # print(form.as_p())
     context = {'courses': courses, 'form': form, "jsData": {"placeholder": ""}}
-    print(ongoing_session)
     if ongoing_session != None:
         context["jsData"]["ongoing_session"] = ongoing_session
     return render(request, 'courses/session.html', context=context)

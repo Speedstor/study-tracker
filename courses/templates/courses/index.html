@@ -32,6 +32,7 @@
                     {% endif %}
 
                     <div class="btn-group" role="group" style="margin-top: 30px;">
+                        <script type="text/javascript" src="{% static 'courses/loadGraphs.js' %}"></script>
                         <input onchange="toggleToday()" type="checkbox" class="btn-check" name="btnGraphType" id="btnTodayGraph" autocomplete="off" checked>
                         <label class="btn btn-outline-primary btn-sm" for="btnTodayGraph">Today</label>
                         
@@ -51,7 +52,7 @@
                     </div>
                     <div class="box dashboard-graphToday" id="graphToday" style="padding: 10px 16px 0px 0px; display: flex; flex-direction: column; max-height: 250px; max-width: 800px; min-width: 450px; width: 47%; height: 230px; margin-top: 4px;">
                         <h6 class="no-margin center" style="position: absolute; padding-left: 86px;">Today</h6>
-                        <div id="timeSpent" style="height: 100%;"></div>
+                        <div id="dayChart" style="height: 100%;"></div>
                     </div>
                 </div>
                 <div class="hover-grab" id="moveWhiteboard" style="position: absolute; bottom: -4px; right: 2px;"><p class="sub">✊ drag to move</p></div>
@@ -77,107 +78,6 @@
 
 </div>
 </div>
-
-    <script>
-        window.addEventListener("load", () => {
-            console.log("hge");
-            var chart = bb.generate({
-            data: {
-                columns: [
-                ["CAT 1", 0, 2.00, 2.00, 4.00, 0, 2.50, .10, .10],
-                ["math 18", 1.30, 1.00, 0, 2.00, 0, 5.0, .10, .10],
-                ["MATH 20c", 0, 2.00, 2.00, 0, 2.50, 2.50, 10, .10],
-                ["cse 11", 1.30, 1.00, 0, 2.00, 0, 5.0, 1.0, .10],
-                ["total", 2.80, 6.00, 4.00, 8.00, 2.30, 6.00, .40, .40]
-                ],
-                type: "bar", // for ESM specify as: bar()
-                types: {
-                    "total": "spline"
-                },
-                groups: [
-                ["CAT 1",
-            "math 18",
-            "MATH 20c",
-            "cse 11",
-                ]
-                ],
-            colors:{
-            },
-            },
-            grid: {
-                y: {
-                lines: [
-                    {
-                    value: 0
-                    }
-                ]
-                }
-            },
-            bindto: "#weekChart"
-            });
-
-            
-            var chart = bb.generate({
-            data: {
-                order: null,
-                columns: [
-                ["transparent0", 10, 9, 10.5, 11],
-                ["gap1", 0, 2.00, 2.00, 4.00],
-                ["transparent1", 1.30, 1.00, 0, 2.00],
-                ["gap3", 0, 2.00, 2.00, 0],
-                ["gap4", 1.30, 1.00, 0, 2.00],
-                ["transparent2", 1.30, 1.00, 0, 2.00],
-                ["gap5", 1.30, 1.00, 0, 2.00],
-                ["transparent3", 5, 1.00, 0, 2.00],
-                ],
-                type: "bar", // for ESM specify as: bar()
-                groups: [
-                ["gap1",
-                "gap2",
-                "gap3",
-                "gap4",
-                "gap5",
-                "transparent1",
-                "transparent2",
-                "transparent3",
-                "transparent0",
-                ]
-                ],
-            colors:{
-                "transparent1": "#00000000",
-                "transparent2": "#00000000",
-                "transparent3": "#00000000",
-                "transparent0": "#00000000",
-            },
-            },
-            grid: {
-                y: {
-                lines: [
-                    {
-                    value: 0
-                    }
-                ]
-                }
-            },
-            axis:{
-                rotated: true,
-                x:{
-                    type: "category",
-                    categories: [
-                        "cat1",
-                        "math 18",
-                        "cse 11",
-                        "math 20c",
-                    ]
-                },
-            },
-            legend: {
-                show: false
-            },
-            bindto: "#timeSpent"
-            });
-        })
-    </script>
 
 {% endblock %}
 
