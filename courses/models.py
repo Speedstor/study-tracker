@@ -15,10 +15,12 @@ class StudySession(models.Model):
     course = models.ForeignKey(Course, on_delete=models.CASCADE)
     start_date = models.DateTimeField('date started')
     end_date = models.DateTimeField('date ended')
+    last_ping = models.DateTimeField('last pinged')
     duration = models.PositiveIntegerField(default=0)  # duration in minutes
 
     def set_duration(self):
-        self.duration = (self.end_date - self.start_date).seconds // 60
+        endd = self.last_ping if self.end_date.strftime('%Y-%m-%d %H:%M:%S') == self.start_date.strftime('%Y-%m-%d %H:%M:%S') else self.start_date;
+        self.duration = (endd - self.start_date).seconds // 60
 
     def __str__(self):
         return f'{self.course} study session for {self.duration} minutes'

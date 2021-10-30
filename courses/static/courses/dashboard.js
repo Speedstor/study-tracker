@@ -48,8 +48,8 @@ window.addEventListener("mousemove", (e) =>{
   })
   window.addEventListener("resize", () => {
     setTimeout(function(){
-        let margin = eval(document.getElementById("whiteboard").style.marginTop) ;
-        if( margin < -document.getElementById("whiteboard").clientHeight + 50) document.getElementById("whiteboard").style.marginTop =  -document.getElementById("whiteboard").clientHeight + 50 + "px";
+        let margin = eval(document.getElementById("whiteboard").style.marginTop.replace("px", "")) ;
+        if( margin < -document.getElementById("whiteboard").clientHeight + 50) document.getElementById("whiteboard").style.marginTop =  (-document.getElementById("whiteboard").clientHeight + 50 )+ "px";
     }, 200);
   })
 

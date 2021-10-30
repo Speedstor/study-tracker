@@ -16,6 +16,14 @@ def get_study_sessions_last_week(course_id, now):
                                                  end_date__lte=end_of_last_week)
     return study_sessions
 
+def get_study_sessions_today(course_id, now):
+    course = Course.objects.all().get(pk=course_id)
+    start_date = get_start_of_day(now)
+    end_date = get_end_of_day(now)
+    study_sessions = StudySession.objects.filter(course=course,
+                                                 start_date__gte=start_date,
+                                                 end_date__lte=end_date)
+    return study_sessions
 
 def get_study_sessions_this_week(course_id, now):
     course = Course.objects.all().get(pk=course_id)
@@ -65,3 +73,11 @@ def get_end_of_last_week(d: timezone.datetime):
     # Subtract 1 second from the start of this week
     delta = timezone.timedelta(seconds=1)
     return start_of_this_week - delta
+
+def get_start_of_day(d: timezone.datetime):
+    return timezone.datetime.replace(d, year=d.year, month=d.month, day=d.day, hour=0, minute=0, second=0,
+                                     tzinfo=timezone.utc)
+                                     
+def get_end_of_day(d: timezone.datetime):
+    return timezone.datetime.replace(d, year=d.year, month=d.month, day=d.day, hour=23, minute=59, second=59,
+                                     tzinfo=timezone.utc)

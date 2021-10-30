@@ -13,19 +13,19 @@
         <input type="submit" value="Start">
     </form>
 
-{#    <form action="{% url 'courses:session' %}" method='post'>#}
-{#        {% csrf_token %}#}
-{##}
-{#        {% for c in courses %}#}
-{#            <div>#}
-{#                <input type="radio" id="{{ c.id }}" value="{{ c.id }}">#}
-{#                <label for="{{ c.id }}">{{ c.course_name }}</label>#}
-{#                <input type="submit" value="Start">#}
-{##}
-{#            </div>#}
-{#        {% endfor %}#}
-{##}
-{#    </form>#}
+    {% comment %} <form action="{% url 'courses:session' %}" method='post'>
+        {% csrf_token %}
+
+        {% for c in courses %}
+            <div>
+                <input type="radio" id="{{ c.id }}" value="{{ c.id }}">
+                <label for="{{ c.id }}">{{ c.course_name }}</label>
+                <input type="submit" value="Start">
+
+            </div>
+        {% endfor %}
+
+    </form> {% endcomment %}
 {% else %}
     <p>You don't have any courses yet. Create a course on your home page first.</p>
 {% endif %}

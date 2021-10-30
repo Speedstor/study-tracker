@@ -3,15 +3,32 @@ from django.urls import reverse
 from django.utils import timezone
 from django.http import HttpResponseRedirect, JsonResponse
 from django.views.decorators.csrf import csrf_exempt
+from django.core import serializers
 
 from .models import Course, StudySession
 from .forms import CourseForm, StudySessionForm
+from . import queries
 
+from datetime import datetime
 
 # View for the home page
 def index(request):
     courses = Course.objects.all()
-    context = {'courses': courses}
+    now = datetime.utcnow();
+    jsData = {
+        "study_sessions": {},
+    }
+    for c in courses:
+        jsData["study_sessions"][c.id] = {
+            "course_name": c.course_name,
+            'today': serializers.serialize("json", queries.get_study_sessions_today(c.id, now)),
+            'this_week': serializers.serialize("json", queries.get_study_sessions_this_week(c.id, now)),
+            'last_week': serializers.serialize("json", queries.get_study_sessions_last_week(c.id, now)),
+        }
+    context = {
+        'courses': courses,
+        'jsData': jsData,
+    }
     return render(request, 'courses/index.html', context=context)
 
 
@@ -23,7 +40,8 @@ def detail(request, course_id):
     for s in sessions:
         total_time += s.duration
     context = {
-        'tempString': f'You are looking at course {course.course_name}. You have spent {total_time} minutes studying for this course.'}
+        'tempString': f'You are looking at course {course.course_name}. You have spent {total_time} minutes studying for this course.'
+    }
     return render(request, 'courses/placeholder.html', context=context)
 
 
@@ -86,18 +104,24 @@ def session(request):
                 study_session.save()
                 # Store the study session Id in session storage
                 request.session['session_id'] = study_session.id
+            elif session_status == 'ping':
+                course_id = request.session['course_id']
+                study_session = StudySession.objects.get(pk=request.session['session_id'])
+                study_session.last_ping = timezone.now()
+                study_session.set_duration()
+                study_session.save()
+                return JsonResponse(status=202, data={'status': "success"})
             elif session_status == 'ended':
                 print('session ended')
                 print('course id at end is ', request.session['course_id'])
                 print('session id at end is ', request.session['session_id'])
 
-                sec_elapsed = int(request.POST['secElapsed'])
-                print('secElapsed from client is', str(sec_elapsed))
+                #removed code that sets secElapse from POST parameter to automatic
+                    #decided from the time of POST request for the end date
 
                 # Get session object, update end date and duration, and save to DB
                 study_session = StudySession.objects.get(pk=request.session['session_id'])
-                end_date = study_session.start_date + timezone.timedelta(seconds=sec_elapsed)
-                study_session.end_date = end_date
+                study_session.end_date = timezone.now()
                 study_session.set_duration()
                 study_session.save()
 
@@ -106,5 +130,4 @@ def session(request):
                 return JsonResponse(status=302, data={'redirectURL': redirect_url})
             else:
                 print('sessionStatus unrecognized: ', session_status)
-
     return render(request, 'courses/session.html')
