@@ -10,21 +10,21 @@ class StudySessionTests(TestCase):
 
     def test_set_duration(self):
         # Create a course so we can associate a study session with it
-        course = Course(course_name='TestCourse', date_added=timezone.now())
+        course = Course(course_name='TestCourse', date_added=timezone.localtime(timezone.now()))
         course.save()
 
         # Set the duration
-        start = timezone.now()
+        start = timezone.localtime(timezone.now())
         delta = timezone.timedelta(minutes=25)
         end = start + delta
-        study_session = StudySession(course=course, start_date=start, end_date=end)
+        study_session = StudySession(course=course, start_date=start, end_date=end, last_ping=end)
         study_session.set_duration()
 
         self.assertEqual(25, study_session.duration)
 
     def test_study_sessions_this_week(self):
         # Create a course so we can associate a study session with it
-        course = Course(course_name='TestCourse', date_added=timezone.now())
+        course = Course(course_name='TestCourse', date_added=timezone.localtime(timezone.now()))
         course.save()
 
         now = timezone.datetime(year=2021, month=10, day=25, tzinfo=timezone.utc)
@@ -45,12 +45,12 @@ class StudySessionTests(TestCase):
         other_ids = []
         delta = timezone.timedelta(minutes=25)
         for d in this_week_dates:
-            study_session = StudySession(course=course, start_date=d, end_date=d + delta)
+            study_session = StudySession(course=course, start_date=d, end_date=d + delta, last_ping=d + delta)
             study_session.set_duration()
             study_session.save()
             this_week_ids.append(study_session.id)
         for d in other_dates:
-            study_session = StudySession(course=course, start_date=d, end_date=d + delta)
+            study_session = StudySession(course=course, start_date=d, end_date=d + delta, last_ping=d + delta)
             study_session.set_duration()
             study_session.save()
             other_ids.append(study_session.id)
@@ -61,7 +61,7 @@ class StudySessionTests(TestCase):
 
     def test_study_sessions_last_week(self):
         # Create a course so we can associate a study session with it
-        course = Course(course_name='TestCourse', date_added=timezone.now())
+        course = Course(course_name='TestCourse', date_added=timezone.localtime(timezone.now()))
         course.save()
 
         now = timezone.datetime(year=2021, month=10, day=25, tzinfo=timezone.utc)
@@ -83,12 +83,12 @@ class StudySessionTests(TestCase):
         other_ids = []
         delta = timezone.timedelta(minutes=25)
         for d in last_week_dates:
-            study_session = StudySession(course=course, start_date=d, end_date=d + delta)
+            study_session = StudySession(course=course, start_date=d, end_date=d + delta, last_ping=d + delta)
             study_session.set_duration()
             study_session.save()
             last_week_ids.append(study_session.id)
         for d in other_dates:
-            study_session = StudySession(course=course, start_date=d, end_date=d + delta)
+            study_session = StudySession(course=course, start_date=d, end_date=d + delta, last_ping=d + delta)
             study_session.set_duration()
             study_session.save()
             other_ids.append(study_session.id)

@@ -4,16 +4,46 @@
 {% block content %}
 {% include 'partials/_sidebar.html' %}
 
-<div style="padding: 30px;">
-<h1>{{ courseName }}</h1>
-
 <script src="{% static 'courses/session.js' %}"></script>
-<h1 id="timerElement" style="text-align:center;">This text is where the timer should be</h1>
-<br>
-<button onclick="endSession()">End session</button>
+<div style="padding: 30px;">
+    <div id="start-session-div" style="display: {% if jsData.ongoing_session %} none {% else %} block {% endif %};">
+        <h1>Select a course to study for:</h1>
+        {% if courses %}
+            <form action="{% url 'api:api_session' %}" method="post">
+                {% csrf_token %}
+                {{ form }}
+                <input type="button" value="Start" onclick="start_session();">
+            </form>
 
-<script>
-</script>
+            {% comment %} <form action="{% url 'courses:session' %}" method='post'>
+                {% csrf_token %}
 
+                {% for c in courses %}
+                    <div>
+                        <input type="radio" id="{{ c.id }}" value="{{ c.id }}">
+                        <label for="{{ c.id }}">{{ c.course_name }}</label>
+                        <input type="submit" value="Start">
+
+                    </div>
+                {% endfor %}
+
+            </form> {% endcomment %}
+        {% else %}
+            <p>You don't have any courses yet. Create a course on your home page first.</p>
+        {% endif %}
+    </div>
+    <div id="ongoing-session-div" style="display: {% if jsData.ongoing_session %} block {% else %} none {% endif %};">
+        <h1>{{ courseName }}</h1>
+
+        <h1 style="text-align:left;">Podormo Timer: </h1><label id="countdownTimer">25:00</label>
+        <h1 style="text-align:left;">Accumulated Time: </h1><label id="countupTimer">00:00</label>
+        <br>
+        <button onclick="endSession()">End session</button>
+
+        <script>
+        </script>
+    </div>
 </div>
+
+
 {% endblock %}

@@ -3,12 +3,6 @@
 {% block page-title %}Study Tracker (UCSD){% endblock %}
 {% block content %}
 {% include 'partials/_sidebar.html' %}
-{% load js %}
-<script>
-    {% if jsData %}
-        var jsData = {{ jsData | object_jsStr }};
-    {% endif %}
-</script>
 <script type="text/javascript" src="{% static 'courses/dashboard.js' %}"></script>
 
 <div style="flex-grow: 20; overflow-x: hidden; position: relative;">

@@ -19,8 +19,8 @@ class StudySession(models.Model):
     duration = models.PositiveIntegerField(default=0)  # duration in minutes
 
     def set_duration(self):
-        endd = self.last_ping if self.end_date.strftime('%Y-%m-%d %H:%M:%S') == self.start_date.strftime('%Y-%m-%d %H:%M:%S') else self.start_date;
-        self.duration = (endd - self.start_date).seconds // 60
+        endd = self.last_ping if self.end_date.strftime('%Y-%m-%d %H:%M:%S') == self.start_date.strftime('%Y-%m-%d %H:%M:%S') else self.end_date
+        self.duration = (endd - self.start_date).seconds
 
     def __str__(self):
         return f'{self.course} study session for {self.duration} minutes'
