@@ -33,6 +33,16 @@ function getChartData_weekChart(study_sessions){
                 value: 0
                 }
             ]
+            },
+        },
+        axis:{
+            y: {
+                tick: {
+                    format: function(x) { return Math.floor(x)+"h"/* +" "+Math.round(x%1/60)+"m" */; },
+                    culling:{
+                        min: 1
+                    }
+                },
             }
         },
         bindto: "#weekChart"
@@ -70,54 +80,44 @@ function getChartData_weekChart(study_sessions){
     return chartData
 }
 
+function str_fill(str, filler, length, ifFront = true){
+    while(str.length < length){
+        if(ifFront) str = filler + str
+        else str = str + filler
+    }
+    return str
+}
+
 function getChartData_dayChart(study_sessions){
     let chartData = {
         data: {
             order: null,
-            columns: [
-            // ["transparent0", 10, 9, 10.5, 11],
-            // ["gap1", 0, 2.00, 2.00, 4.00],
-            // ["transparent1", 1.30, 1.00, 0, 2.00],
-            // ["gap3", 0, 2.00, 2.00, 0],
-            // ["gap4", 1.30, 1.00, 0, 2.00],
-            // ["transparent2", 1.30, 1.00, 0, 2.00],
-            // ["gap5", 1.30, 1.00, 0, 2.00],
-            // ["transparent3", 5, 1.00, 0, 2.00],
-            ],
-            type: "bar", // for ESM specify as: bar()
-            groups: [
-                // ["gap1",
-                // "gap2",
-                // "gap3",
-                // "gap4",
-                // "gap5",
-                // "transparent1",
-                // "transparent2",
-                // "transparent3",
-                // "transparent0",
-                // ]
-            ],
-            colors:{"transparent1": "#00000000"},
+            columns: [],
+            type: "bar",
+            groups: [],
+            colors:{}, /* "transparent1": "#00000000" */
         },
-        grid: {
-            y: {
-            lines: [
-                {
-                value: 0
+        tooltip: {
+            format: {
+                title: function(x) {
+                    return d3.timeFormat("%Y-%m-%d %H:%M:%S")(x);
                 }
-            ]
             }
         },
         axis:{
             rotated: true,
+            y: {
+                max: 24.0,
+                padding: {
+                    top: 0
+                },
+                tick: {
+                  format: function(x) { return str_fill(Math.floor(x)+"", "0", 2)+":"+str_fill(Math.round(x%1/60)+"", "0", 2, false); }
+                }
+            },
             x:{
                 type: "category",
-                categories: [
-                    "cat1",
-                    "math 18",
-                    "cse 11",
-                    "math 20c",
-                ]
+                categories: [],
             },
         },
         legend: {
@@ -128,16 +128,14 @@ function getChartData_dayChart(study_sessions){
     
     let classes_sessions = {}
     let mostSessions = 0
+    let courseList = []
     for (const [course_id, session_wrap] of Object.entries(study_sessions)) {
         course_name = jsData.courses[course_id].course_name
         sessions = []
         todaySessions = typeof(session_wrap.today) == "string" ? JSON.parse(session_wrap.today) : session_wrap.today
-        console.log(todaySessions)
         if(todaySessions.length > 0){
-            // let last_end = new Date(1999, 10, 10, 0, 0, 0, 0)
-            // last_end.setDate()
-            var last_end = new Date(Date.parse(todaySessions[0].fields.start_date));
-            last_end.setHours(0,0,0,0);
+            var last_end = new Date(Date.parse(todaySessions[0].fields.start_date))
+            last_end.setHours(0,0,0,0)
     
             for(var i = 0; i < todaySessions.length; i++){
                 let session = todaySessions[i]
@@ -149,10 +147,11 @@ function getChartData_dayChart(study_sessions){
                 sessions.push(inHours(start, last_end))
             }
             var end_of_day = new Date(Date.parse(todaySessions[0].fields.start_date));
-            end_of_day.setHours(23,59,59,999);
-            sessions.push(inHours(last_end, end_of_day))
+            end_of_day.setHours(23,59,59,0);
+            sessions.push(24-sessions.reduce((a, b) => a + b))
         }
 
+        courseList.push(course_name)
         classes_sessions[course_id] = {
             "course_name": course_name,
             "sessions": sessions
@@ -163,20 +162,18 @@ function getChartData_dayChart(study_sessions){
     let courseKeys = Object.keys(classes_sessions)
     let columns = []
     let groups = []
-    let color = {}
+    let colors = {}
     for(var i = 0; i < mostSessions; i++){
         let current = []
         let dataName = "solid"+i
         if(i % 2 == 0){
             dataName = "transparent"+i
-            color[dataName] = "#00000000"
+            colors[dataName] = "#00000000"
         }
         current.push(dataName)
         groups.push(dataName)
         for (const key of courseKeys) {
-            console.log(classes_sessions[key]["sessions"])
             if(i < classes_sessions[key]["sessions"].length){
-                //transparent
                 current.push(classes_sessions[key]["sessions"][i])
             }else{
                 current.push(0)
@@ -187,9 +184,9 @@ function getChartData_dayChart(study_sessions){
 
     chartData.data.columns = columns
     chartData.data.groups.push(groups)
-    chartData.data.colors = color
-    console.log(classes_sessions)
-    console.log(chartData)
+    chartData.data.colors = colors
+    console.log(courseList)
+    chartData.axis.x.categories = courseList
     return chartData
 }
 
