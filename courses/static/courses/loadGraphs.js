@@ -38,12 +38,16 @@ function getChartData_weekChart(study_sessions){
         axis:{
             y: {
                 tick: {
-                    format: function(x) { return Math.floor(x)+"h"/* +" "+Math.round(x%1/60)+"m" */; },
+                    format: function(x) { return Math.round(x*10)/10+"h"/* +" "+Math.round(x%1/60)+"m" */; },
                     culling:{
                         min: 1
                     }
                 },
-            }
+            },
+            x:{
+                type: "category",
+                categories: ["Sun", "Mon", "Tue", "Wed", "Thur", "Fri", "Sat"],
+            },
         },
         bindto: "#weekChart"
     }
