@@ -18,17 +18,14 @@ def get_study_sessions_last_week(course_id, now):
 
 def get_study_sessions_today(course_id, now):
     course = Course.objects.all().get(pk=course_id)
-    start_date = get_start_of_day(now)
-    end_date = get_end_of_day(now)
     study_sessions = StudySession.objects.filter(course=course,
-                                                 start_date__gte=start_date,
-                                                 end_date__lte=end_date)
+                                                 start_date__gte=datetime.date.today())
     return study_sessions
 
 def get_study_sessions_this_week(course_id, now):
     course = Course.objects.all().get(pk=course_id)
-    start_of_this_week = get_start_of_week(now)
-    end_of_this_week = get_end_of_week(now)
+    start_of_this_week = get_start_of_week(now) - timezone.timedelta(hours=24)
+    end_of_this_week = get_end_of_week(now) - timezone.timedelta(hours=24)
     study_sessions = StudySession.objects.filter(course=course,
                                                  start_date__gte=start_of_this_week,
                                                  end_date__lte=end_of_this_week)

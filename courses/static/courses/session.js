@@ -25,6 +25,11 @@ const apiSessionUrl = "http://"+window.location.host+"/api/session";
     }
 }
 
+function setGlobalTimerElement(){
+    // TODO:: Get it from cookies
+    window.countdownTimer = document.getElementById("timerBig")
+    window.countupTimer = document.getElementById("timerSmall")
+}
 
 /**
  * Called when a session is started. Displays a countdown timer to the user. Stops the timer
@@ -37,7 +42,8 @@ function start_session() {
 
     document.getElementById("start-session-div").style.display = "none";
     document.getElementById("ongoing-session-div").style.display = "block";
-    let countdownTimer = document.getElementById("countdownTimer");
+    document.getElementById("session-course-name").innerText = document.getElementById("id_course").value;
+    let countdownTimer = window.countdownTimer;
      // Compute the amount of time left
     timeRemaining = DEFULT_TIMER_DURATION;
     let minutes = Math.floor(timeRemaining / 60);
@@ -67,33 +73,35 @@ function updateTimer(){
     let minutes = Math.floor(timeRemaining / 60);
     let seconds = Math.floor(timeRemaining % 60);
     // Update the time display
-    document.getElementById("countdownTimer").innerHTML = formatSecondsMinutes(minutes) + " : " + formatSecondsMinutes(seconds);
+    window.countdownTimer.innerHTML = formatSecondsMinutes(minutes) + " : " + formatSecondsMinutes(seconds);
     minutes = Math.floor(timeAccumulate / 60);
     seconds = Math.floor(timeAccumulate % 60);
-    document.getElementById("countupTimer").innerHTML = formatSecondsMinutes(minutes) + " : " + formatSecondsMinutes(seconds);
+    window.countupTimer.innerHTML = formatSecondsMinutes(minutes) + " : " + formatSecondsMinutes(seconds);
 }
 
 function continue_session() {
     if(jsData.hasOwnProperty("ongoing_session")){
         jsData["ongoing_session"] = JSON.parse(jsData["ongoing_session"])[0].fields
         let ongoing_session = jsData["ongoing_session"]
-        console.log("continue_session")
         if(ongoing_session.start_date != ongoing_session.end_date) {
-            console.log("session errore")
             document.getElementById("start-session-div").style.display = "block";
             document.getElementById("ongoing-session-div").style.display = "none";
             return
         }
-        console.log(new Date())
-        console.log(ongoing_session.start_date)
-        console.log(new Date(Date.parse(ongoing_session.start_date)))
-        var time_since_session_start = ((new Date())-(new Date(Date.parse(ongoing_session.start_date))))/1000;
-        console.log(time_since_session_start)
+        
+        let since_date = new Date(Date.parse(ongoing_session.start_date))
+        var time_since_session_start = ((new Date())-(since_date))/1000;
+        document.getElementById("since-time-str").innerText = since_date.toTimeString().substr(0, 5)
         timeRemaining = DEFULT_TIMER_DURATION - time_since_session_start;
         timeAccumulate = time_since_session_start
+        jsData.courses = JSON.parse(jsData.courses)
+        for(const course of jsData.courses){
+            if(course.pk == jsData.ongoing_course_id)
+                document.getElementById("session-course-name").innerText = course.fields.course_name
+        }
+        setGlobalTimerElement()
         updateTimer()
         start_timer()
-
     }
 }
 
@@ -171,7 +179,31 @@ window.demo = demo
 // window.onreload = endSession
 
 window.addEventListener("load", () => {
+    window.autoPodormo = false //TODO:: get this from cookie
+    setGlobalTimerElement()
     if(jsData.hasOwnProperty("ongoing_session")){
         continue_session()
     }
 })
+
+
+function swapTimer(){
+    let tempElem = window.countdownTimer
+    window.countdownTimer = window.countupTimer
+    window.countupTimer = tempElem
+    updateTimer()
+    let tempStr = document.getElementById("timerSpanBig").innerText
+    document.getElementById("timerSpanBig").innerText = document.getElementById("timerSpanSmall").innerText
+    document.getElementById("timerSpanSmall").innerText = tempStr
+}
+
+function toggleAutoPodormo(){
+    var autoPodormoElem = document.getElementById("autoPodormo")
+    if(autoPodormoElem.getAttribute("data-toggle") == "true"){
+        autoPodormoElem.setAttribute("data-toggle", "false")
+        autoPodormoElem.style.backgroundColor = "#efefef";
+    }else{
+        autoPodormoElem.setAttribute("data-toggle", "true")
+        autoPodormoElem.style.backgroundColor = "#8be592";
+    }
+}

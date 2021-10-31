@@ -120,7 +120,9 @@ def session(request):
         pass
 
     # print(form.as_p())
-    context = {'courses': courses, 'form': form, "jsData": {"placeholder": ""}}
+    context = {'courses': courses, 'form': form, "jsData": {"courses": serializers.serialize("json", courses)}}
     if ongoing_session != None:
         context["jsData"]["ongoing_session"] = ongoing_session
+        if request.session['course_id']:
+            context["jsData"]["ongoing_course_id"] = request.session['course_id']
     return render(request, 'courses/session.html', context=context)

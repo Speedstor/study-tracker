@@ -189,8 +189,8 @@ function getChartData_dayChart(study_sessions){
     chartData.data.columns = columns
     chartData.data.groups.push(groups)
     chartData.data.colors = colors
-    console.log(courseList)
     chartData.axis.x.categories = courseList
+    console.log(chartData)
     return chartData
 }
 

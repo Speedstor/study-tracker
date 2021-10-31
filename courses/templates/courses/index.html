@@ -7,8 +7,7 @@
 
 <div style="flex-grow: 20; overflow-x: hidden; position: relative;">
 
-<div class="background" style="position: absolute; background: url('{% static 'src/texturedBackground.png' %}');  width: 100%; height: 100%;">
-</div>
+{% include 'partials/_postitBackground.html' %}
 
 <div style="position: absolute; width: 100%; height: 100%; padding: 0px 30px;">
     <div class="" id="whiteboard" style="display: grid; grid-template-columns: 14px auto 14px; grid-template-rows: 14px auto 14px; width: 100%; margin-top: 100px;">
@@ -62,6 +61,7 @@
     </div>
     <div style="display: flex; width: 100%; justify-content: center; align-items: baseline; margin-top: 3px;">
         <a class="btn btn-sm" href="{% url 'courses:add_course' %}">Add a course</a>
+        <a class="btn btn-sm" href="{% url 'courses:list' %}">List my courses</a>
         <a class="btn btn-sm" href="{% url 'courses:start_study_session' %}">Start a study session</a>
     </div>
     <div style="display: flex; width: 100%; justify-content: center; align-items: baseline;">
