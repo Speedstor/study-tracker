@@ -10,14 +10,48 @@ window.addEventListener("load", () => {
         }
     }
     if(jsData.hasOwnProperty('study_sessions')){
-        let chartData = getChartData_weekChart(jsData.study_sessions);
-        window.weekChart = bb.generate(chartData);
-        chartData = getChartData_dayChart(jsData.study_sessions);
-        window.dayChart = bb.generate(chartData);
+        if(document.getElementById("dayChart")) loadChart("day")
+        if(document.getElementById("weekChart")) loadChart("week")
+        if(document.getElementById("monthChart")) loadChart("month")
+        if(document.getElementById("yearChart")) loadChart("year")
+        if(document.getElementById("coursePiChart")) loadChart("coursePi")
+        if(document.getElementById("skillsRadarChart")) loadChart("skillsRadar")
+        if(document.getElementById("durationTimeScatterChart")) loadChart("durationTimeScatter")
     }
 })
 
-function getChartData_weekChart(study_sessions){
+function loadChart(type){
+    switch(type){
+    case "week":
+        window.weekChart = bb.generate(getChartData_timeBar(jsData.study_sessions, 1, 7, "this_week", "weekChart"));
+        break;
+    case "day":
+        window.dayChart = bb.generate(getChartData_dayChart(jsData.study_sessions));
+        break;
+    case "month":
+        window.monthChart = bb.generate(getChartData_timeBar(jsData.study_sessions, 1, 31, "month", "monthChart"));
+        break;
+    case "year":
+        window.monthChart = bb.generate(getChartData_timeBar(jsData.study_sessions, 31, 356, "year", "yearChart"));
+        break;
+    case "coursePi":
+        // window.coursePiChart = bb.generate(getChartData_dayChart(jsData.study_sessions));
+        break;
+    case "skillsRadar":
+        // window.skillsRadarChart = bb.generate(getChartData_dayChart(jsData.study_sessions));
+        break;
+    case "durationTimeScatter":
+        // window.durationTimeScatterChart = bb.generate(getChartData_dayChart(jsData.study_sessions));
+        break;
+    }
+}
+
+function getChartData_monthChart(study_sessions){
+
+
+}
+
+function getChartData_timeBar(study_sessions, daysInBar, totalBars, dataFrom, elemId){
     let chartData = {
         data: {
             columns: [], // to be filled out
@@ -49,25 +83,44 @@ function getChartData_weekChart(study_sessions){
                 categories: ["Sun", "Mon", "Tue", "Wed", "Thur", "Fri", "Sat"],
             },
         },
-        bindto: "#weekChart"
+        bindto: "#"+elemId
     }
+    if (dataFrom == "this_week"){
+        chartData.axis.x = {
+            type: "category",
+            categories: ["Sun", "Mon", "Tue", "Wed", "Thur", "Fri", "Sat"],
+        }
+    }else if(dataFrom == "month"){
+        chartData.axis.x = {
+            
+        }
+    }else if(dataFrom == "year"){
+        chartData.axis.x = {
+            type: "category",
+            categories: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
+        }
+    }
+
     
-    let total_days = [0, 0, 0, 0, 0, 0, 0]
+    let total_days = [0]
     for (const [course_id, session_wrap] of Object.entries(study_sessions)) {
         let classData = {}
-        let total_each_day = [0, 0, 0, 0, 0, 0, 0]
+        let total_each_day = [0]
         classData.course_name = jsData.courses[course_id].course_name
-        classData.this_week = typeof(session_wrap.this_week) == "string" ? JSON.parse(session_wrap.this_week) : session_wrap.this_week
+        classData[dataFrom] = typeof(session_wrap[dataFrom]) == "string" ? JSON.parse(session_wrap[dataFrom]) : session_wrap[dataFrom]
         let dayCount = -1
         let dayMarker = null
-        for (var i = 0; i < classData.this_week.length; i++){
-            let session = classData.this_week[i]
+        for (var i = 0; i < classData[dataFrom].length; i++){
+            let session = classData[dataFrom][i]
             let start = new Date(Date.parse(session.fields.start_date))
             let end = new Date(Date.parse(session.fields.end_date))
-            if(dayMarker == null || start.getDate() != dayMarker){
-                dayMarker = start.getDate()
+            if(dayMarker == null || start.getDate() - dayMarker.getDate() >= daysInBar){
+                console.log(start.getDate())
+                total_each_day.push(0)
+                total_days.push(0)
                 dayCount++
             }
+            dayMarker = start
 
             let duration = session.fields.duration
             if(duration != (end.getTime() - start.getTime())/60000) duration =  (end.getTime() - start.getTime())/60000
@@ -79,7 +132,11 @@ function getChartData_weekChart(study_sessions){
         chartData["data"]["columns"].push([classData.course_name, ...total_each_day])
         chartData["data"]["groups"][0].push(classData.course_name)
     }
+    while(total_days.length < (totalBars/daysInBar)){
+        total_days.push(0)
+    }
     chartData["data"]["columns"].push(["total", ...total_days])
+    console.log(chartData)
     //TODO:: let user choose the color for each course
     return chartData
 }
@@ -156,6 +213,7 @@ function getChartData_dayChart(study_sessions){
         }
 
         courseList.push(course_name)
+        if(sessions.length <= 0) sessions.push(24)
         classes_sessions[course_id] = {
             "course_name": course_name,
             "sessions": sessions

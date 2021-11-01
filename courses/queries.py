@@ -31,6 +31,23 @@ def get_study_sessions_this_week(course_id, now):
                                                  end_date__lte=end_of_this_week)
     return study_sessions
 
+def get_study_sessions_byType(course_id, now, type):
+    course = Course.objects.all().get(pk=course_id)
+    start = None
+    end = None
+    if type == "month":
+        start = now - timezone.timedelta(days=30)
+        end = now
+    elif type == "year":
+        start = now - timezone.timedelta(days=360)
+        end = now
+    else:
+        get_study_sessions_today()
+    study_sessions = StudySession.objects.filter(course=course,
+                                                 start_date__gte=start,
+                                                 end_date__lte=end)
+    return study_sessions
+
 
 # Returns the datetime associated with the start of the week for the given datetime.
 def get_start_of_week(d: timezone.datetime):

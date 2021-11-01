@@ -79,6 +79,20 @@ function updateTimer(){
     window.countupTimer.innerHTML = formatSecondsMinutes(minutes) + " : " + formatSecondsMinutes(seconds);
 }
 
+function setCourseNameAndTime(){
+    let ongoing_session = jsData["ongoing_session"]
+
+    let since_date = new Date(Date.parse(ongoing_session.start_date))
+    document.getElementById("since-time-str").innerText = since_date.toTimeString().substr(0, 5)
+
+    for(const course of jsData.courses){
+        console.log("wh")
+        if(course.pk == jsData.ongoing_course_id){
+            document.getElementById("session-course-name").innerText = course.fields.course_name
+        }
+    }
+}
+
 function continue_session() {
     if(jsData.hasOwnProperty("ongoing_session")){
         jsData["ongoing_session"] = JSON.parse(jsData["ongoing_session"])[0].fields
@@ -91,14 +105,10 @@ function continue_session() {
         
         let since_date = new Date(Date.parse(ongoing_session.start_date))
         var time_since_session_start = ((new Date())-(since_date))/1000;
-        document.getElementById("since-time-str").innerText = since_date.toTimeString().substr(0, 5)
         timeRemaining = DEFULT_TIMER_DURATION - time_since_session_start;
         timeAccumulate = time_since_session_start
         jsData.courses = JSON.parse(jsData.courses)
-        for(const course of jsData.courses){
-            if(course.pk == jsData.ongoing_course_id)
-                document.getElementById("session-course-name").innerText = course.fields.course_name
-        }
+        setCourseNameAndTime();
         setGlobalTimerElement()
         updateTimer()
         start_timer()

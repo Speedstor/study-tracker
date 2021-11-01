@@ -1,3 +1,4 @@
+from django.http.response import HttpResponse
 from django.shortcuts import render
 from django.urls import reverse
 from django.utils import timezone
@@ -93,8 +94,7 @@ def session(request):
     # Get all of the courses to display in the <select> dropdown
     courses = [c for c in Course.objects.all()]
     courses = sorted(courses, key=lambda c: c.course_name)
-    form = StudySessionForm()
-
+    form = StudySessionForm()  # form.as_p()
     ongoing_session = None
 
     #these two variables should be in user settings || or be apple, and take the best settings and force it on the user, but still, it should be in a setting with constants, either in code, or from a settings file
@@ -116,13 +116,35 @@ def session(request):
         else:
             pass # there is no ongoing session
     except:
-        # the user does not have any session yet, and it would have error when fetching
-        pass
+        pass # the user does not have any session yet, and it would have error when fetching
 
-    # print(form.as_p())
     context = {'courses': courses, 'form': form, "jsData": {"courses": serializers.serialize("json", courses)}}
     if ongoing_session != None:
         context["jsData"]["ongoing_session"] = ongoing_session
         if request.session['course_id']:
             context["jsData"]["ongoing_course_id"] = request.session['course_id']
     return render(request, 'courses/session.html', context=context)
+
+
+def analytics(request):
+    courses = [c for c in Course.objects.all()]
+    courses = sorted(courses, key=lambda c: c.course_name)
+    now = datetime.utcnow();
+    jsData = {
+        "study_sessions": {},
+        "courses": serializers.serialize("json", courses),
+    }
+    for c in courses:
+        jsData["study_sessions"][c.id] = {
+            "course_name": c.course_name,
+            'today': serializers.serialize("json", queries.get_study_sessions_today(c.id, now)),
+            'this_week': serializers.serialize("json", queries.get_study_sessions_this_week(c.id, now)),
+            'last_week': serializers.serialize("json", queries.get_study_sessions_last_week(c.id, now)),
+            'month': serializers.serialize("json", queries.get_study_sessions_byType(c.id, now, "month")),
+            'year': serializers.serialize("json", queries.get_study_sessions_byType(c.id, now, "year")),
+        }
+    context = {
+        'courses': courses,
+        'jsData': jsData,
+    }
+    return render(request, 'courses/analytics.html', context=context)
