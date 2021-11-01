@@ -32,7 +32,7 @@ function loadChart(type){
         window.monthChart = bb.generate(getChartData_timeBar(jsData.study_sessions, 1, 31, "month", "monthChart"));
         break;
     case "year":
-        window.monthChart = bb.generate(getChartData_timeBar(jsData.study_sessions, 31, 356, "year", "yearChart"));
+        window.monthChart = bb.generate(getChartData_timeBar(jsData.study_sessions, 31, 357, "year", "yearChart"));
         break;
     case "coursePi":
         // window.coursePiChart = bb.generate(getChartData_dayChart(jsData.study_sessions));
@@ -102,10 +102,11 @@ function getChartData_timeBar(study_sessions, daysInBar, totalBars, dataFrom, el
     }
 
     
-    let total_days = [0]
+    let total_days = new Array(Math.round(totalBars/daysInBar)).fill(0)
+    console.log(total_days)
     for (const [course_id, session_wrap] of Object.entries(study_sessions)) {
         let classData = {}
-        let total_each_day = [0]
+        let total_each_day = new Array(Math.round(totalBars/daysInBar)).fill(0)
         classData.course_name = jsData.courses[course_id].course_name
         classData[dataFrom] = typeof(session_wrap[dataFrom]) == "string" ? JSON.parse(session_wrap[dataFrom]) : session_wrap[dataFrom]
         let dayCount = -1
@@ -114,11 +115,20 @@ function getChartData_timeBar(study_sessions, daysInBar, totalBars, dataFrom, el
             let session = classData[dataFrom][i]
             let start = new Date(Date.parse(session.fields.start_date))
             let end = new Date(Date.parse(session.fields.end_date))
-            if(dayMarker == null || start.getDate() - dayMarker.getDate() >= daysInBar){
+            if(dayMarker == null){
+
+            }
+            switch(dataFrom){
+            case "this_week":
+                dayCount = start.getDay()
+                break;
+            case "month":
                 console.log(start.getDate())
-                total_each_day.push(0)
-                total_days.push(0)
-                dayCount++
+                dayCount = start.getDate()-1
+                break;
+            case "year":
+                dayCount = start.getMonth()
+                break;
             }
             dayMarker = start
 
@@ -132,9 +142,8 @@ function getChartData_timeBar(study_sessions, daysInBar, totalBars, dataFrom, el
         chartData["data"]["columns"].push([classData.course_name, ...total_each_day])
         chartData["data"]["groups"][0].push(classData.course_name)
     }
-    while(total_days.length < (totalBars/daysInBar)){
-        total_days.push(0)
-    }
+
+    console.log()
     chartData["data"]["columns"].push(["total", ...total_days])
     console.log(chartData)
     //TODO:: let user choose the color for each course
@@ -149,6 +158,10 @@ function str_fill(str, filler, length, ifFront = true){
     return str
 }
 
+function getChartData_coursePi(){
+    
+}
+
 function getChartData_dayChart(study_sessions){
     let chartData = {
         data: {
@@ -158,19 +171,12 @@ function getChartData_dayChart(study_sessions){
             groups: [],
             colors:{}, /* "transparent1": "#00000000" */
         },
-        tooltip: {
-            format: {
-                title: function(x) {
-                    return d3.timeFormat("%Y-%m-%d %H:%M:%S")(x);
-                }
-            }
-        },
         axis:{
             rotated: true,
             y: {
                 max: 24.0,
                 padding: {
-                    top: 0
+                    top: 10
                 },
                 tick: {
                   format: function(x) { return str_fill(Math.floor(x)+"", "0", 2)+":"+str_fill(Math.round(x%1/60)+"", "0", 2, false); }
