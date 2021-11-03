@@ -18,16 +18,24 @@ def index(request):
     courses = Course.objects.all()
     now = datetime.utcnow();
     jsData = {
-        "study_sessions": {},
+        "study_sessions": [],
         "courses": serializers.serialize("json", courses),
     }
     for c in courses:
-        jsData["study_sessions"][c.id] = {
-            "course_name": c.course_name,
-            'today': serializers.serialize("json", queries.get_study_sessions_today(c.id, now)),
-            'this_week': serializers.serialize("json", queries.get_study_sessions_this_week(c.id, now)),
-            'last_week': serializers.serialize("json", queries.get_study_sessions_last_week(c.id, now)),
-        }
+        c_study_sessions = queries.get_study_sessions_byType(c.id, now, "month")
+        for ss in c_study_sessions:
+            pp.pprint(ss)
+            jsData["study_sessions"].append({
+                "course_name": c.course_name,
+                "course_id": c.id,
+                'study_session': {
+                    'id': ss.id,
+                    'start_date': str(ss.start_date),
+                    'end_date': str(ss.end_date),
+                    'last_ping': str(ss.last_ping),
+                    'duration': ss.duration
+                },
+            })
     context = {
         'courses': courses,
         'jsData': jsData,
@@ -125,24 +133,32 @@ def session(request):
             context["jsData"]["ongoing_course_id"] = request.session['course_id']
     return render(request, 'courses/session.html', context=context)
 
+import pprint
+pp = pprint.PrettyPrinter(indent=4)
 
 def analytics(request):
     courses = [c for c in Course.objects.all()]
     courses = sorted(courses, key=lambda c: c.course_name)
     now = datetime.utcnow();
     jsData = {
-        "study_sessions": {},
+        "study_sessions": [],
         "courses": serializers.serialize("json", courses),
     }
     for c in courses:
-        jsData["study_sessions"][c.id] = {
-            "course_name": c.course_name,
-            'today': serializers.serialize("json", queries.get_study_sessions_today(c.id, now)),
-            'this_week': serializers.serialize("json", queries.get_study_sessions_this_week(c.id, now)),
-            'last_week': serializers.serialize("json", queries.get_study_sessions_last_week(c.id, now)),
-            'month': serializers.serialize("json", queries.get_study_sessions_byType(c.id, now, "month")),
-            'year': serializers.serialize("json", queries.get_study_sessions_byType(c.id, now, "year")),
-        }
+        c_study_sessions = queries.get_study_sessions_byType(c.id, now, "year")
+        for ss in c_study_sessions:
+            pp.pprint(ss)
+            jsData["study_sessions"].append({
+                "course_name": c.course_name,
+                "course_id": c.id,
+                'study_session': {
+                    'id': ss.id,
+                    'start_date': str(ss.start_date),
+                    'end_date': str(ss.end_date),
+                    'last_ping': str(ss.last_ping),
+                    'duration': ss.duration
+                },
+            })
     context = {
         'courses': courses,
         'jsData': jsData,
