@@ -103,20 +103,17 @@ function getChartData_timeBar(study_sessions, daysInBar, totalBars, chartType){
 
     
     let total_days = new Array(Math.round(totalBars/daysInBar)).fill(0)
-    console.log(total_days)
-    for (const [course_id, session_wrap] of Object.entries(study_sessions)) {
+    for(const c of jsData.courses){
         let classData = {}
         let total_each_day = new Array(Math.round(totalBars/daysInBar)).fill(0)
+        chartData["data"]["groups"][0].push(classData.course_name)
         classData.course_name = jsData.courses[course_id].course_name
-        let dayCount = -1
-        let dayMarker = null
+    }
+    for (const session of study_sessions) {
         for (var i = 0; i < study_sessions.length; i++){
-            let session = study_sessions[i]
-            let start = new Date(Date.parse(session.fields.start_date))
-            let end = new Date(Date.parse(session.fields.end_date))
-            if(dayMarker == null){
-
-            }
+            let dayCount = -1
+            let start = new Date(Date.parse(session.start_date))
+            let end = new Date(Date.parse(session.end_date))
             switch(chartType){
             case "this_week":
                 dayCount = start.getDay()
@@ -129,7 +126,6 @@ function getChartData_timeBar(study_sessions, daysInBar, totalBars, chartType){
                 dayCount = start.getMonth()
                 break;
             }
-            dayMarker = start
 
             let duration = session.fields.duration
             if(duration != (end.getTime() - start.getTime())/60000) duration =  (end.getTime() - start.getTime())/60000
@@ -139,7 +135,6 @@ function getChartData_timeBar(study_sessions, daysInBar, totalBars, chartType){
         }
 
         chartData["data"]["columns"].push([classData.course_name, ...total_each_day])
-        chartData["data"]["groups"][0].push(classData.course_name)
     }
 
     chartData["data"]["columns"].push(["total", ...total_days])
