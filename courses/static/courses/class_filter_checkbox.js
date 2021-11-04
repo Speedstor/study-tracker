@@ -9,7 +9,7 @@ function redisplay_class_to_graph(course_id){
     for(var i = 0; i < window.deselect_classes.length; i++){
         if(window.deselect_classes[i] == course_id) window.deselect_classes.splice(i, 1)
     }
-    autoLoadAll()
+    autoLoadAll(course_id)
 }
 function checkbox_toggle_class(elem, course_id){
     console.log(elem.value)

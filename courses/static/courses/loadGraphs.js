@@ -159,9 +159,14 @@ function autoUnoadAll(course_id){
         }
         if(document.getElementById("yearChart")){
             window.yearChart.unload({ids: [course_name, "total"]})
-            // window.yearChart.load({columns: getChartData_timeBar(jsData.study_sessions, 31, 357, "year", "yearChart").data.columns});
 
         }
+        setTimeout(()=>{
+            if(document.getElementById("weekChart"))                          window.weekChart.load({columns: getChartData_timeBar(jsData.study_sessions, 1, 7,  "week", "weekChart", true, ["null"]).data.columns})
+            if(document.getElementById("monthChart"))                         window.monthChart.load({columns: getChartData_timeBar(jsData.study_sessions, 1, 31,  "month", "monthChart", true, ["null"]).data.columns})
+            if(document.getElementById("yearChart"))                          window.yearChart.load({columns: getChartData_timeBar(jsData.study_sessions, 31, 357, "year", "yearChart", true, ["null"]).data.columns})
+        }, 500)
+
         if(document.getElementById("coursePiChart-week"))           window.coursePiWeekChart.unload({ids: course_name})
         if(document.getElementById("coursePiChart-month"))          window.coursePiMonthChart.unload({ids: course_name})
         if(document.getElementById("coursePiChart-year"))           window.coursePiYearChart.unload({ids: course_name})
