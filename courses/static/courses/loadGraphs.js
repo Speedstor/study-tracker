@@ -83,7 +83,8 @@ const skills_chartData = {
             ["x", "Avg Study Duration", "Studied how many times", "Avg Time of Study\n(out->early, in->late)"],
         ],
         type: "radar", // for ESM specify as: radar()
-        labels: false
+        labels: false,
+        colors:{}, // to be filled out
     },
     radar: {
         axis: {
@@ -103,6 +104,7 @@ const durationTime_chartData = {
         xs: {},
         columns: [],
         type: "scatter", // for ESM specify as: scatter()
+        colors:{}, // to be filled out
     },
     axis: {
         x: {
@@ -196,9 +198,9 @@ function autoLoadAll(course_id){
         if(document.getElementById("coursePiChart-month"))                window.coursePiMonthChart.unload({ids: "none.."})
         if(document.getElementById("coursePiChart-year"))                 window.coursePiYearChart.unload({ids: "none.."})
         setTimeout(()=>{
-            if(document.getElementById("coursePiChart-week"))                 window.coursePiWeekChart.load({columns: getChartData_coursePi(jsData.study_sessions, "week", "week", true, ["null", course_id]).data.columns})
-            if(document.getElementById("coursePiChart-month"))                window.coursePiMonthChart.load({columns: getChartData_coursePi(jsData.study_sessions, "month", "month", true, ["null", course_id]).data.columns})
-            if(document.getElementById("coursePiChart-year"))                 window.coursePiYearChart.load({columns: getChartData_coursePi(jsData.study_sessions, "year", "year", true, ["null", course_id]).data.columns})
+            if(document.getElementById("coursePiChart-week"))                 window.coursePiWeekChart.load({columns: getChartData_coursePi(jsData.study_sessions, "week", "week").data.columns})
+            if(document.getElementById("coursePiChart-month"))                window.coursePiMonthChart.load({columns: getChartData_coursePi(jsData.study_sessions, "month", "month").data.columns})
+            if(document.getElementById("coursePiChart-year"))                 window.coursePiYearChart.load({columns: getChartData_coursePi(jsData.study_sessions, "year", "year").data.columns})
         }, 300)
         if(document.getElementById("skillsRadarChart"))                   window.skillsRadarChart.load({columns: getChartData_skills(jsData.study_sessions, "skillsRadarChart").data.columns})
         if(document.getElementById("durationTimeScatterChart"))           window.durationTimeScatterChart.load({columns: getChartData_durationTime(jsData.study_sessions, "durationTimeScatterChart").data.columns})
