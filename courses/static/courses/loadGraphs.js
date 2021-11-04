@@ -380,12 +380,12 @@ function getChartData_coursePi(study_sessions, type, elemId, allow_course_select
         else continue;
         chartData["data"]["columns"].push([c.course_name, c["total"]])
     }
-    if(if_all_zero) {
-        chartData["data"]["columns"].push(["none..", 1])
-        chartData["data"]["colors"] = {
-            "none..": "#bdbdbd"
-        }
-    }
+    // if(if_all_zero) {
+    //     chartData["data"]["columns"].push(["none..", 1])
+    //     chartData["data"]["colors"] = {
+    //         "none..": "#bdbdbd"
+    //     }
+    // }
     console.log(chartData)
     return chartData
 }
