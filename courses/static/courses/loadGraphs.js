@@ -62,6 +62,62 @@ const dayChart_chartData = {
         show: false
     },
 }
+const coursePi_chartData = {
+    data: {
+      columns: [],
+      type: "donut", // for ESM specify as: donut()
+    },
+    donut: {
+      title: "",
+      label: {}
+    },
+    tooltip: {
+      format: {},
+    }
+  }
+
+const skills_chartData = {
+    data: {
+        x: "x",
+        columns: [
+            ["x", "Avg Duration", "Number of Sessions", "Avg Time of Stud0y\n0(out->early, in->late)"],
+        ],
+        type: "radar", // for ESM specify as: radar()
+        labels: false
+    },
+    radar: {
+        axis: {
+            // max: 400
+        },
+        level: {
+            depth: 4
+        },
+        direction: {
+            clockwise: true
+        }
+    },
+}
+
+const durationTime_chartData = {
+    data: {
+        xs: {},
+        columns: [],
+        type: "scatter", // for ESM specify as: scatter()
+    },
+    axis: {
+        x: {
+            label: "Time of day",
+            tick: {
+                fit: false
+            }
+        },
+        y: {
+            label: "Sessions' Duration"
+        }
+    },
+    bindto: "#scatterPlot"
+}
+
 
 window.addEventListener("load", () => {
     if(jsData.hasOwnProperty('study_sessions')){
@@ -69,7 +125,9 @@ window.addEventListener("load", () => {
         if(document.getElementById("weekChart")) loadChart("week")
         if(document.getElementById("monthChart")) loadChart("month")
         if(document.getElementById("yearChart")) loadChart("year")
-        if(document.getElementById("coursePiChart")) loadChart("coursePi")
+        if(document.getElementById("coursePiChart-month")) loadChart("coursePi-month")
+        if(document.getElementById("coursePiChart-week")) loadChart("coursePi-week")
+        if(document.getElementById("coursePiChart-year")) loadChart("coursePi-year")
         if(document.getElementById("skillsRadarChart")) loadChart("skillsRadar")
         if(document.getElementById("durationTimeScatterChart")) loadChart("durationTimeScatter")
     }
@@ -89,21 +147,165 @@ function loadChart(type){
     case "year":
         window.monthChart = bb.generate(getChartData_timeBar(jsData.study_sessions, 31, 357, "year", "yearChart"));
         break;
-    case "coursePi":
-        // window.coursePiChart = bb.generate(getChartData_dayChart(jsData.study_sessions));
+    case "coursePi-week":
+        window.coursePiWeekChart = bb.generate(getChartData_coursePi(jsData.study_sessions, "week", "coursePiChart-week"));
+        break;
+    case "coursePi-month":
+        window.coursePiMonthChart = bb.generate(getChartData_coursePi(jsData.study_sessions, "month", "coursePiChart-month"));
+        break;
+    case "coursePi-year":
+        window.coursePiMonthChart = bb.generate(getChartData_coursePi(jsData.study_sessions, "year", "coursePiChart-year"));
         break;
     case "skillsRadar":
-        // window.skillsRadarChart = bb.generate(getChartData_dayChart(jsData.study_sessions));
+        window.skillsRadarChart = bb.generate(getChartData_skills(jsData.study_sessions, "skillsRadarChart"));
         break;
     case "durationTimeScatter":
-        // window.durationTimeScatterChart = bb.generate(getChartData_dayChart(jsData.study_sessions));
+        window.durationTimeScatterChart = bb.generate(getChartData_durationTime(jsData.study_sessions, "durationTimeScatterChart"));
         break;
     }
 }
 
-function getChartData_monthChart(study_sessions){
+function getChartData_durationTime(study_sessions, elemId){
+    let todayDate = new Date() // this could be changed into a parameter, so that we can show last week, last month
 
+    let chartData = JSON.parse(JSON.stringify(durationTime_chartData))
+    chartData["bindto"] = "#"+elemId
+    chartData["axis"]["x"]["tick"]["format"] = function(x) { return str_fill(Math.floor(x)+"", "0", 2)+":"+str_fill(Math.round(x%1/60)+"", "0", 2, false); }
+    
 
+    let classData = {}
+    for(const [c_id, c] of Object.entries(jsData.courses)){
+        classData[c_id] = {}
+        classData[c_id]["course_name"] = jsData.courses[c_id].course_name
+        classData[c_id]["x"] = []
+        classData[c_id]["y"] = []
+
+        //TODO:: let user choose the color for each course
+        //chartData["columns"]["color"].append({classData[c_id]["course_name"]: "#fffff"})
+    }
+
+    for (const study_session of study_sessions) {
+        let session = study_session.session
+        let start = new Date(Date.parse(session.start_date))
+        let end = new Date(Date.parse(session.end_date))
+        classData[study_session.course_id]["y"].push(inHours(start, end))
+        classData[study_session.course_id]["x"].push(Math.round(start.getTime()/36000)/100)
+    }
+
+    for(const [c_id, c] of Object.entries(classData)){
+        chartData.data.xs[c.course_name] = c.course_name+"_x"
+
+        chartData.data.columns.push([c.course_name+"_x", ...c.x])
+        chartData.data.columns.push([c.course_name, ...c.y])
+    }
+
+    return chartData
+}
+
+function getChartData_skills(study_sessions, elemId){
+    let todayDate = new Date() // this could be changed into a parameter, so that we can show last week, last month
+
+    let chartData = JSON.parse(JSON.stringify(skills_chartData))
+    chartData["bindto"] = "#"+elemId
+
+    let classData = {}
+    for(const [c_id, c] of Object.entries(jsData.courses)){
+        classData[c_id] = {}
+        classData[c_id]["course_name"] = jsData.courses[c_id].course_name
+        classData[c_id]["avgDuration"] = 0
+        classData[c_id]["numOfSessions"] = 0
+        classData[c_id]["avgTimeOfStudy"] = 0
+        
+        //TODO:: let user choose the color for each course
+        //chartData["columns"]["color"].append({classData[c_id]["course_name"]: "#fffff"})
+    }
+
+    for (const study_session of study_sessions) {
+        let session = study_session.session
+        let start = new Date(Date.parse(session.start_date))
+        let end = new Date(Date.parse(session.end_date))
+        classData[study_session.course_id]["avgDuration"] += inHours(start, end)
+        classData[study_session.course_id]["numOfSessions"]++
+        classData[study_session.course_id]["avgTimeOfStudy"] += Math.round(start.getTime()/36000)/100
+    }
+    
+    let maxnumOfSessions = 0;
+    let maxavgDuration = 0;
+    let maxavgTimeOfStudy = 0;
+    for(const key of Object.keys(classData)){
+        let numOfSessions = classData[key]["numOfSessions"]
+        let avgDuration = classData[key]["avgDuration"] / numOfSessions
+        let avgTimeOfStudy = classData[key]["avgTimeOfStudy"] / numOfSessions
+        if(numOfSessions > maxnumOfSessions) maxnumOfSessions = numOfSessions
+        if(avgDuration > maxavgDuration) maxavgDuration = avgDuration
+        if(avgTimeOfStudy > maxavgTimeOfStudy) maxavgTimeOfStudy = avgTimeOfStudy
+    }
+
+    for(const key of Object.keys(classData)){
+        let numOfSessions = classData[key]["numOfSessions"]
+        let avgDuration = classData[key]["avgDuration"] / numOfSessions
+        let avgTimeOfStudy = classData[key]["avgTimeOfStudy"] / numOfSessions
+        numOfSessions = Math.round(numOfSessions/maxnumOfSessions*100)/100
+        avgDuration = Math.round(avgDuration/maxavgDuration*100)/100
+        avgTimeOfStudy = Math.round(avgTimeOfStudy/maxavgTimeOfStudy*100)/100
+
+        chartData.data.columns.push([classData[key]["course_name"], avgDuration, numOfSessions, avgTimeOfStudy])
+    }
+
+    return chartData
+}
+
+function getChartData_coursePi(study_sessions, type, elemId){
+    let todayDate = new Date() // this could be changed into a parameter, so that we can show last week, last month
+
+    let chartData = JSON.parse(JSON.stringify(coursePi_chartData))
+    if(type == "week" || type == "year") chartData['donut']['label']['show'] = false
+    chartData['tooltip']['format']['value'] = function(value, ratio, id) { return value+"h";}
+    chartData["bindto"] = "#"+elemId
+    chartData["donut"]["title"] = type
+
+    let classData = {}
+    for(const [c_id, c] of Object.entries(jsData.courses)){
+        classData[c_id] = {}
+        classData[c_id]["total"] = 0
+        classData[c_id]["course_name"] = jsData.courses[c_id].course_name
+        
+        //TODO:: let user choose the color for each course
+        //chartData["columns"]["color"].append({classData[c_id]["course_name"]: "#fffff"})
+    }
+
+    for (const study_session of study_sessions) {
+        let session = study_session.session
+        let start = new Date(Date.parse(session.start_date))
+        switch(type){
+        case "week":
+            if(todayDate.getWeek() != start.getWeek()) continue;
+            break;
+        case "month":
+            if(todayDate.getMonth() != start.getMonth()) continue;
+            break;
+        case "year":
+            if(todayDate.getYear() != start.getYear()) continue;
+            break;
+        }
+        let end = new Date(Date.parse(session.end_date))
+        classData[study_session.course_id]["total"] += inHours(start, end)
+    }
+
+    let if_all_zero = true;
+    for(const [c_id, c] of Object.entries(classData)){
+        if(c["total"] > 0) if_all_zero = false;
+        else continue;
+        chartData["data"]["columns"].push([c.course_name, c["total"]])
+    }
+    if(if_all_zero) {
+        chartData["data"]["columns"].push(["none..", 1])
+        chartData["data"]["colors"] = {
+            "none..": "#bdbdbd"
+        }
+    }
+    console.log(chartData)
+    return chartData
 }
 
 function getChartData_timeBar(study_sessions, daysInBar, totalBars, chartType, elemId){ //chartType 
@@ -174,18 +376,6 @@ function getChartData_timeBar(study_sessions, daysInBar, totalBars, chartType, e
     chartData["data"]["columns"].push(["total", ...total_days])
     console.log(chartData)
     return chartData
-}
-
-function str_fill(str, filler, length, ifFront = true){
-    while(str.length < length){
-        if(ifFront) str = filler + str
-        else str = str + filler
-    }
-    return str
-}
-
-function getChartData_coursePi(){
-
 }
 
 function getChartData_dayChart(study_sessions, elemId){
@@ -288,6 +478,13 @@ function inHours(start, end){
     return Math.round((end.getTime() - start.getTime())/36000)/100
 }
 
+function str_fill(str, filler, length, ifFront = true){
+    while(str.length < length){
+        if(ifFront) str = filler + str
+        else str = str + filler
+    }
+    return str
+}
 
 
 

@@ -164,7 +164,6 @@ def analytics(request):
             "date_added": str(c.date_added),
         }
         for ss in c_study_sessions:
-            pp.pprint(ss)
             jsData["study_sessions"].append({
                 "course_name": c.course_name,
                 "course_id": c.id,

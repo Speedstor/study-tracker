@@ -66,12 +66,15 @@
                         <h6 class="no-margin center" style="position: absolute; padding-left: 51px;">This Year</h6>
                         <div id="yearChart" style="height: 100%;"></div>
                     </div>
-                    <div class="box dashboard-graphToday" id="graphToday" style="padding: 10px 16px 0px 0px; display: flex; flex-direction: column; max-height: 250px; max-width: 800px; min-width: 450px; width: 47%; height: 230px; margin-top: 4px;">
-                        <h6 class="no-margin center" style="position: absolute; padding-left: 86px;">Time Spent</h6>
-                        <div id="coursePiChart" style="height: 100%;"></div>
+                    <div class="box dashboard-graphToday" id="graphToday" style="position: relative; padding: 10px 16px 0px 16px; display: flex; flex-direction: row; max-height: 250px; max-width: 800px; min-width: 450px; width: 47%; height: 230px; margin-top: 4px;">
+                        {% comment %} <h6 class="no-margin center" style="position: absolute; right: 20px;">Time Spent</h6> {% endcomment %}
+                        <h6 class="no-margin center" style="position: absolute; padding-left: 2px;">Time Spent</h6>
+                        <div id="coursePiChart-year" style="height: 100%; flex-grow: 8; display: flex; justify-content: center; align-items: center;"></div>
+                        <div id="coursePiChart-month" style="height: 100%; flex-grow: 9; display: flex; justify-content: center; align-items: center;"></div>
+                        <div id="coursePiChart-week" style="height: 100%; flex-grow: 10; display: flex; justify-content: center; align-items: center;"></div>
                     </div>
                     <div class="box dashboard-graphToday" id="graphToday" style="padding: 10px 16px 0px 0px; display: flex; flex-direction: column; max-height: 250px; max-width: 800px; min-width: 450px; width: 47%; height: 230px; margin-top: 4px;">
-                        <h6 class="no-margin center" style="position: absolute; padding-left: 86px;">Performance</h6>
+                        <h6 class="no-margin center" style="position: absolute; padding-left: 20px;">Performance</h6>
                         <div id="skillsRadarChart" style="height: 100%;"></div>
                     </div>
                     <div class="box dashboard-graphToday" id="graphToday" style="padding: 10px 16px 0px 0px; display: flex; flex-direction: column; max-height: 250px; max-width: 800px; min-width: 450px; width: 47%; height: 230px; margin-top: 4px;">
