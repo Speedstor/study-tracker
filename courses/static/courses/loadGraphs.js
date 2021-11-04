@@ -161,12 +161,20 @@ function autoUnoadAll(course_id){
             window.yearChart.unload({ids: [course_name, "total"]})
 
         }
+
         setTimeout(()=>{
             if(document.getElementById("weekChart"))                          window.weekChart.load({columns: getChartData_timeBar(jsData.study_sessions, 1, 7,  "week", "weekChart", true, ["null"]).data.columns})
             if(document.getElementById("monthChart"))                         window.monthChart.load({columns: getChartData_timeBar(jsData.study_sessions, 1, 31,  "month", "monthChart", true, ["null"]).data.columns})
             if(document.getElementById("yearChart"))                          window.yearChart.load({columns: getChartData_timeBar(jsData.study_sessions, 31, 357, "year", "yearChart", true, ["null"]).data.columns})
         }, 500)
-
+        setTimeout(()=>{
+            let chartData = getChartData_coursePi(jsData.study_sessions, "week", "week");
+            if(document.getElementById("coursePiChart-week"))                 window.coursePiWeekChart.load({columns: chartData.data.columns, colors: chartData.data.colors})
+            chartData = getChartData_coursePi(jsData.study_sessions, "month", "month");
+            if(document.getElementById("coursePiChart-month"))                window.coursePiMonthChart.load({columns: chartData.data.columns, colors: chartData.data.colors})
+            chartData = getChartData_coursePi(jsData.study_sessions, "year", "year");
+            if(document.getElementById("coursePiChart-year"))                 window.coursePiYearChart.load({columns: chartData.data.columns, colors: chartData.data.colors})
+        }, 300)
         if(document.getElementById("coursePiChart-week"))           window.coursePiWeekChart.unload({ids: course_name})
         if(document.getElementById("coursePiChart-month"))          window.coursePiMonthChart.unload({ids: course_name})
         if(document.getElementById("coursePiChart-year"))           window.coursePiYearChart.unload({ids: course_name})
@@ -176,15 +184,22 @@ function autoUnoadAll(course_id){
 }
 
 // window.yearChart.load({columns: getChartData_timeBar(jsData.study_sessions, 31, 357, "year", "yearChart").data.columns});
-function autoLoadAll(){
+function autoLoadAll(course_id){
+    let course_name = jsData.courses[course_id].course_name
     if(jsData.hasOwnProperty('study_sessions')){
         if(document.getElementById("dayChart"))                           window.dayChart.load({columns: []})
-        if(document.getElementById("weekChart"))                          window.weekChart.load({columns: getChartData_timeBar(jsData.study_sessions, 1, 7,  "week", "weekChart").data.columns})
-        if(document.getElementById("monthChart"))                         window.monthChart.load({columns: getChartData_timeBar(jsData.study_sessions, 1, 31,  "month", "monthChart").data.columns})
-        if(document.getElementById("yearChart"))                          window.yearChart.load({columns: getChartData_timeBar(jsData.study_sessions, 31, 357, "year", "yearChart").data.columns})
-        if(document.getElementById("coursePiChart-week"))                 window.coursePiWeekChart.load({columns: getChartData_coursePi(jsData.study_sessions, "week", "week").data.columns})
-        if(document.getElementById("coursePiChart-month"))                window.coursePiMonthChart.load({columns: getChartData_coursePi(jsData.study_sessions, "month", "month").data.columns})
-        if(document.getElementById("coursePiChart-year"))                 window.coursePiYearChart.load({columns: getChartData_coursePi(jsData.study_sessions, "year", "year").data.columns})
+        if(document.getElementById("weekChart"))                          window.weekChart.load({columns: getChartData_timeBar(jsData.study_sessions, 1, 7,  "week", "weekChart", true, ["null", course_id]).data.columns})
+        if(document.getElementById("monthChart"))                         window.monthChart.load({columns: getChartData_timeBar(jsData.study_sessions, 1, 31,  "month", "monthChart", true, ["null", course_id]).data.columns})
+        if(document.getElementById("yearChart"))                          window.yearChart.load({columns: getChartData_timeBar(jsData.study_sessions, 31, 357, "year", "yearChart", true, ["null", course_id]).data.columns})
+
+        if(document.getElementById("coursePiChart-week"))                 window.coursePiWeekChart.unload({ids: "none.."})
+        if(document.getElementById("coursePiChart-month"))                window.coursePiMonthChart.unload({ids: "none.."})
+        if(document.getElementById("coursePiChart-year"))                 window.coursePiYearChart.unload({ids: "none.."})
+        setTimeout(()=>{
+            if(document.getElementById("coursePiChart-week"))                 window.coursePiWeekChart.load({columns: getChartData_coursePi(jsData.study_sessions, "week", "week", true, ["null", course_id]).data.columns})
+            if(document.getElementById("coursePiChart-month"))                window.coursePiMonthChart.load({columns: getChartData_coursePi(jsData.study_sessions, "month", "month", true, ["null", course_id]).data.columns})
+            if(document.getElementById("coursePiChart-year"))                 window.coursePiYearChart.load({columns: getChartData_coursePi(jsData.study_sessions, "year", "year", true, ["null", course_id]).data.columns})
+        }, 300)
         if(document.getElementById("skillsRadarChart"))                   window.skillsRadarChart.load({columns: getChartData_skills(jsData.study_sessions, "skillsRadarChart").data.columns})
         if(document.getElementById("durationTimeScatterChart"))           window.durationTimeScatterChart.load({columns: getChartData_durationTime(jsData.study_sessions, "durationTimeScatterChart").data.columns})
     }
@@ -370,22 +385,21 @@ function getChartData_coursePi(study_sessions, type, elemId, allow_course_select
 
     let if_all_zero = true;
     for(const [c_id, c] of Object.entries(classData)){
-        if(only_courses.length > 0 && !only_courses.includes(c_id)) continue;
-        // if(allow_course_select && window.deselect_classes && (window.deselect_classes.includes(c_id))) {
-        //     chartData["data"]["columns"].push([c.course_name, 0])
-        //     continue
-        // }
+        if(only_courses.length > 0 && !only_courses.includes(eval(c_id))) continue;
+        if(allow_course_select && window.deselect_classes && (window.deselect_classes.includes(eval(c_id)))) {
+            continue
+        }
 
         if(c["total"] > 0) if_all_zero = false;
         else continue;
         chartData["data"]["columns"].push([c.course_name, c["total"]])
     }
-    // if(if_all_zero) {
-    //     chartData["data"]["columns"].push(["none..", 1])
-    //     chartData["data"]["colors"] = {
-    //         "none..": "#bdbdbd"
-    //     }
-    // }
+    if(if_all_zero) {
+        chartData["data"]["columns"].push(["none..", 1])
+        chartData["data"]["colors"] = {
+            "none..": "#bdbdbd"
+        }
+    }
     console.log(chartData)
     return chartData
 }
@@ -456,7 +470,8 @@ function getChartData_timeBar(study_sessions, daysInBar, totalBars, chartType, e
         total_days[dayIndex] += duration
     }
     for (const [c_id, cData] of Object.entries(classData)){
-        if(only_courses.length > 0 && !only_courses.includes(c_id)) continue;
+        console.log(c_id, only_courses, only_courses.includes(c_id))
+        if(only_courses.length > 0 && !only_courses.includes(eval(c_id))) continue;
         // if(allow_course_select && window.deselect_classes && (window.deselect_classes.includes(c_id))) {
         //     chartData["data"]["columns"].push([cData.course_name, ...(new Array(Math.round(totalBars/daysInBar)).fill(0))])
         //     continue;
