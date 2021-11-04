@@ -22,7 +22,7 @@
                             {% for c in courses %}
                                 <label class="control control-checkbox">
                                     {{ c.course_name }}
-                                        <input type="checkbox" checked="checked" />
+                                        <input type="checkbox" checked="checked" onchange="checkbox_toggle_class(this, {{c.id}});" />
                                     <div class="control_indicator"></div>
                                 </label>
                             {% endfor %}
