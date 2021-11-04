@@ -29,7 +29,8 @@ def session(request):
                 course_id = request.session['course_id']
                 course = Course.objects.get(pk=course_id)
                 # Create session object and save to DB
-                study_session = StudySession(course=course, start_date=timezone.localtime(timezone.now()), end_date=timezone.localtime(timezone.now()), last_ping=timezone.localtime(timezone.now()))
+                time_now = timezone.now()
+                study_session = StudySession(course=course, start_date=timezone.localtime(time_now), end_date=timezone.localtime(time_now), last_ping=timezone.localtime(time_now))
                 study_session.save()
                 # Store the study session Id in session storage
                 request.session['session_id'] = study_session.id

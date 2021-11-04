@@ -1,3 +1,5 @@
+//TODO:: if there is two window opened with session, when one session ends, it needs to notify the other, or have some way of handling it
+
 function demo() {
     console.log("You were able to call this JS function")
 }
@@ -38,11 +40,17 @@ function setGlobalTimerElement(){
 function start_session() {
     console.log("in function startSession")
     // Notify the server that a session has been started.
+    if(typeof(jsData.courses) == "string"){
+        jsData.courses = JSON.parse(jsData.courses)
+    }
+    console.log((new Date()).toTimeString().substr(0, 5), jsData.courses[ document.getElementById("id_course").value].course_name)
+    document.getElementById("since-time-str").innerText = (new Date()).toTimeString().substr(0, 5)
+    document.getElementById("session-course-name").innerHTML = jsData.courses[ document.getElementById("id_course").value].course_name
+    console.log(document.getElementById("since-time-str").innerHTML,  document.getElementById("session-course-name").innerText)
     notifySessionStarted()
 
     document.getElementById("start-session-div").style.display = "none";
     document.getElementById("ongoing-session-div").style.display = "block";
-    document.getElementById("session-course-name").innerText = document.getElementById("id_course").value;
     let countdownTimer = window.countdownTimer;
      // Compute the amount of time left
     timeRemaining = DEFULT_TIMER_DURATION;
@@ -85,15 +93,16 @@ function setCourseNameAndTime(){
     let since_date = new Date(Date.parse(ongoing_session.start_date))
     document.getElementById("since-time-str").innerText = since_date.toTimeString().substr(0, 5)
 
-    for(const course of jsData.courses){
+    for(const course of Object.values(jsData.courses)){
         console.log("wh")
-        if(course.pk == jsData.ongoing_course_id){
-            document.getElementById("session-course-name").innerText = course.fields.course_name
+        if(course.id == jsData.ongoing_course_id){
+            document.getElementById("session-course-name").innerText = course.course_name
         }
     }
 }
 
 function continue_session() {
+    console.log("continugin")
     if(jsData.hasOwnProperty("ongoing_session")){
         jsData["ongoing_session"] = JSON.parse(jsData["ongoing_session"])[0].fields
         let ongoing_session = jsData["ongoing_session"]
@@ -107,7 +116,6 @@ function continue_session() {
         var time_since_session_start = ((new Date())-(since_date))/1000;
         timeRemaining = DEFULT_TIMER_DURATION - time_since_session_start;
         timeAccumulate = time_since_session_start
-        jsData.courses = JSON.parse(jsData.courses)
         setCourseNameAndTime();
         setGlobalTimerElement()
         updateTimer()
@@ -182,11 +190,6 @@ function notifySessionEnded() {
 function resetTimerIntervalId() {
     timerIntervalId = 0;
 }
-
-window.endSession = endSession
-window.demo = demo
-// window.onunload = endSession
-// window.onreload = endSession
 
 window.addEventListener("load", () => {
     window.autoPodormo = false //TODO:: get this from cookie

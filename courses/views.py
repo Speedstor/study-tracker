@@ -19,16 +19,21 @@ def index(request):
     now = datetime.utcnow();
     jsData = {
         "study_sessions": [],
-        "courses": serializers.serialize("json", courses),
+        "courses": {},
     }
     for c in courses:
         c_study_sessions = queries.get_study_sessions_byType(c.id, now, "month")
+        jsData["courses"][c.id] = {
+            "id": c.id,
+            "course_name": c.course_name,
+            "date_added": str(c.date_added),
+        }
         for ss in c_study_sessions:
             pp.pprint(ss)
             jsData["study_sessions"].append({
                 "course_name": c.course_name,
                 "course_id": c.id,
-                'study_session': {
+                'session': {
                     'id': ss.id,
                     'start_date': str(ss.start_date),
                     'end_date': str(ss.end_date),
@@ -126,7 +131,14 @@ def session(request):
     except:
         pass # the user does not have any session yet, and it would have error when fetching
 
-    context = {'courses': courses, 'form': form, "jsData": {"courses": serializers.serialize("json", courses)}}
+    jsData = {'courses': {}}
+    for c in courses:
+        jsData["courses"][c.id] = {
+            "id": c.id,
+            "course_name": c.course_name,
+            "date_added": str(c.date_added),
+        }
+    context = {'courses': courses, 'form': form, "jsData": jsData}
     if ongoing_session != None:
         context["jsData"]["ongoing_session"] = ongoing_session
         if request.session['course_id']:
@@ -142,16 +154,21 @@ def analytics(request):
     now = datetime.utcnow();
     jsData = {
         "study_sessions": [],
-        "courses": serializers.serialize("json", courses),
+        "courses": {},
     }
     for c in courses:
         c_study_sessions = queries.get_study_sessions_byType(c.id, now, "year")
+        jsData["courses"][c.id] = {
+            "id": c.id,
+            "course_name": c.course_name,
+            "date_added": str(c.date_added),
+        }
         for ss in c_study_sessions:
             pp.pprint(ss)
             jsData["study_sessions"].append({
                 "course_name": c.course_name,
                 "course_id": c.id,
-                'study_session': {
+                'session': {
                     'id': ss.id,
                     'start_date': str(ss.start_date),
                     'end_date': str(ss.end_date),
