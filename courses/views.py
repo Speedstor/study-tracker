@@ -89,18 +89,6 @@ def list(request):
     return render(request, 'courses/list.html', context=context)
 
 
-# !! Deprecated - session would only be on session.html
-# View for choosing a course to study for
-def start_study_session(request):
-    # Get all of the courses to display in the <select> dropdown
-    courses = [c for c in Course.objects.all()]
-    courses = sorted(courses, key=lambda c: c.course_name)
-    form = StudySessionForm()
-    # print(form.as_p())
-    context = {'courses': courses, 'form': form}
-    return render(request, 'courses/start_study_session.html', context=context)
-
-
 # !! Old code changed, moved to api/session, to change/create/end session -> need to use api/session instead
 # View for a study session with timer
 def session(request):
