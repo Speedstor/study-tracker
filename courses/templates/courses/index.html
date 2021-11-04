@@ -4,6 +4,8 @@
 {% block content %}
 {% include 'partials/_sidebar.html' %}
 <script type="text/javascript" src="{% static 'courses/dashboard.js' %}"></script>
+<script type="text/javascript" src="{% static 'courses/class_filter_checkbox.js' %}"></script>
+<script type="text/javascript" src="{% static 'courses/loadGraphs.js' %}"></script>
 
 <div style="flex-grow: 20; overflow-x: hidden; position: relative;">
 
@@ -31,7 +33,6 @@
                     {% endif %}
 
                     <div class="btn-group" role="group" style="margin-top: 30px;">
-                        <script type="text/javascript" src="{% static 'courses/loadGraphs.js' %}"></script>
                         <input onchange="toggleToday()" type="checkbox" class="btn-check" name="btnGraphType" id="btnTodayGraph" autocomplete="off" checked>
                         <label class="btn btn-outline-primary btn-sm" for="btnTodayGraph">Today</label>
                         

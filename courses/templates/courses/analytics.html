@@ -5,6 +5,7 @@
 {% include 'partials/_sidebar.html' %}
 <script type="text/javascript" src="{% static 'courses/dashboard.js' %}"></script>
 <script type="text/javascript" src="{% static 'courses/loadGraphs.js' %}"></script>
+<script type="text/javascript" src="{% static 'courses/class_filter_checkbox.js' %}"></script>
 <script src="https://d3js.org/d3.v7.min.js"></script>
 
 <div style="flex-grow: 20; overflow-x: hidden; position: relative;">
@@ -23,7 +24,7 @@
                                 {% for c in courses %}
                                     <label class="control control-checkbox">
                                         {{ c.course_name }}
-                                            <input type="checkbox" checked="checked" />
+                                            <input type="checkbox" checked="checked" onchange="checkbox_toggle_class(this, {{c.id}});" />
                                         <div class="control_indicator"></div>
                                     </label>
                                 {% endfor %}

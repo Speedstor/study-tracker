@@ -80,7 +80,7 @@ const skills_chartData = {
     data: {
         x: "x",
         columns: [
-            ["x", "Avg Duration", "Number of Sessions", "Avg Time of Stud0y\n0(out->early, in->late)"],
+            ["x", "Avg Study Duration", "Studied how many times", "Avg Time of Study\n(out->early, in->late)"],
         ],
         type: "radar", // for ESM specify as: radar()
         labels: false
@@ -109,7 +109,11 @@ const durationTime_chartData = {
             label: "Time of day",
             tick: {
                 fit: false
-            }
+            },
+            max: 24.0,
+            padding: {
+                top: 10
+            },
         },
         y: {
             label: "Sessions' Duration"
@@ -120,52 +124,100 @@ const durationTime_chartData = {
 
 
 window.addEventListener("load", () => {
+    let allow_course_select = true; // allow buttons to be pressed, so that the graphs would disclude courses
+    
     if(jsData.hasOwnProperty('study_sessions')){
-        if(document.getElementById("dayChart")) loadChart("day")
-        if(document.getElementById("weekChart")) loadChart("week")
-        if(document.getElementById("monthChart")) loadChart("month")
-        if(document.getElementById("yearChart")) loadChart("year")
-        if(document.getElementById("coursePiChart-month")) loadChart("coursePi-month")
-        if(document.getElementById("coursePiChart-week")) loadChart("coursePi-week")
-        if(document.getElementById("coursePiChart-year")) loadChart("coursePi-year")
-        if(document.getElementById("skillsRadarChart")) loadChart("skillsRadar")
-        if(document.getElementById("durationTimeScatterChart")) loadChart("durationTimeScatter")
+        if(document.getElementById("dayChart"))                     loadChart("day", "dayChart")
+        if(document.getElementById("weekChart"))                    loadChart("week", "weekChart")
+        if(document.getElementById("monthChart"))                   loadChart("month", "monthChart")
+        if(document.getElementById("yearChart"))                    loadChart("year", "yearChart")
+        if(document.getElementById("coursePiChart-week"))           loadChart("coursePi-week", "coursePiChart-week")
+        if(document.getElementById("coursePiChart-month"))          loadChart("coursePi-month", "coursePiChart-month")
+        if(document.getElementById("coursePiChart-year"))           loadChart("coursePi-year", "coursePiChart-year")
+        if(document.getElementById("skillsRadarChart"))             loadChart("skillsRadar", "skillsRadarChart")
+        if(document.getElementById("durationTimeScatterChart"))     loadChart("durationTimeScatter", "durationTimeScatterChart")
     }
 })
 
-function loadChart(type){
+function autoUnoadAll(course_id){
+    let course_name = jsData.courses[course_id].course_name
+    if(jsData.hasOwnProperty('study_sessions')){
+        // if(document.getElementById("dayChart"))                     window.dayChart.unload({ids: course_name})
+        if(document.getElementById("weekChart")){
+            window.weekChart.unload({ids: [course_name, "total"]})
+            // window.weekChart.load({
+            //     columns: getChartData_timeBar(jsData.study_sessions, 1, 7,  "week", "weekChart").data.columns
+            // });
+
+        }
+        if(document.getElementById("monthChart")){
+            window.monthChart.unload({ids: [course_name, "total"]})
+            // window.monthChart.load({
+            //     columns: getChartData_timeBar(jsData.study_sessions, 1, 31,  "month", "monthChart").data.columns
+            // });
+
+        }
+        if(document.getElementById("yearChart")){
+            window.yearChart.unload({ids: [course_name, "total"]})
+            // window.yearChart.load({columns: getChartData_timeBar(jsData.study_sessions, 31, 357, "year", "yearChart").data.columns});
+
+        }
+        if(document.getElementById("coursePiChart-week"))           window.coursePiWeekChart.unload({ids: course_name})
+        if(document.getElementById("coursePiChart-month"))          window.coursePiMonthChart.unload({ids: course_name})
+        if(document.getElementById("coursePiChart-year"))           window.coursePiYearChart.unload({ids: course_name})
+        if(document.getElementById("skillsRadarChart"))             window.skillsRadarChart.unload({ids: course_name})
+        if(document.getElementById("durationTimeScatterChart"))     window.durationTimeScatterChart.unload({ids: course_name})
+    }
+}
+
+// window.yearChart.load({columns: getChartData_timeBar(jsData.study_sessions, 31, 357, "year", "yearChart").data.columns});
+function autoLoadAll(){
+    if(jsData.hasOwnProperty('study_sessions')){
+        if(document.getElementById("dayChart"))                           window.dayChart.load({columns: []})
+        if(document.getElementById("weekChart"))                          window.weekChart.load({columns: getChartData_timeBar(jsData.study_sessions, 1, 7,  "week", "weekChart").data.columns})
+        if(document.getElementById("monthChart"))                         window.monthChart.load({columns: getChartData_timeBar(jsData.study_sessions, 1, 31,  "month", "monthChart").data.columns})
+        if(document.getElementById("yearChart"))                          window.yearChart.load({columns: getChartData_timeBar(jsData.study_sessions, 31, 357, "year", "yearChart").data.columns})
+        if(document.getElementById("coursePiChart-week"))                 window.coursePiWeekChart.load({columns: getChartData_coursePi(jsData.study_sessions, "week", "week").data.columns})
+        if(document.getElementById("coursePiChart-month"))                window.coursePiMonthChart.load({columns: getChartData_coursePi(jsData.study_sessions, "month", "month").data.columns})
+        if(document.getElementById("coursePiChart-year"))                 window.coursePiYearChart.load({columns: getChartData_coursePi(jsData.study_sessions, "year", "year").data.columns})
+        if(document.getElementById("skillsRadarChart"))                   window.skillsRadarChart.load({columns: getChartData_skills(jsData.study_sessions, "skillsRadarChart").data.columns})
+        if(document.getElementById("durationTimeScatterChart"))           window.durationTimeScatterChart.load({columns: getChartData_durationTime(jsData.study_sessions, "durationTimeScatterChart").data.columns})
+    }
+}
+
+function loadChart(type, elemId){
     switch(type){
-    case "week":
-        window.weekChart = bb.generate(getChartData_timeBar(jsData.study_sessions, 1, 7,  "week", "weekChart"));
-        break;
     case "day":
-        window.dayChart = bb.generate(getChartData_dayChart(jsData.study_sessions, "dayChart"));
+        window.dayChart = bb.generate(getChartData_dayChart(jsData.study_sessions, elemId));
+        break;
+    case "week":
+        window.weekChart = bb.generate(getChartData_timeBar(jsData.study_sessions, 1, 7,  "week", elemId));
         break;
     case "month":
-        window.monthChart = bb.generate(getChartData_timeBar(jsData.study_sessions, 1, 31,  "month", "monthChart"));
+        window.monthChart = bb.generate(getChartData_timeBar(jsData.study_sessions, 1, 31,  "month", elemId));
         break;
     case "year":
-        window.monthChart = bb.generate(getChartData_timeBar(jsData.study_sessions, 31, 357, "year", "yearChart"));
+        window.yearChart = bb.generate(getChartData_timeBar(jsData.study_sessions, 31, 357, "year", elemId));
         break;
     case "coursePi-week":
-        window.coursePiWeekChart = bb.generate(getChartData_coursePi(jsData.study_sessions, "week", "coursePiChart-week"));
+        window.coursePiWeekChart = bb.generate(getChartData_coursePi(jsData.study_sessions, "week", elemId));
         break;
     case "coursePi-month":
-        window.coursePiMonthChart = bb.generate(getChartData_coursePi(jsData.study_sessions, "month", "coursePiChart-month"));
+        window.coursePiMonthChart = bb.generate(getChartData_coursePi(jsData.study_sessions, "month", elemId));
         break;
     case "coursePi-year":
-        window.coursePiMonthChart = bb.generate(getChartData_coursePi(jsData.study_sessions, "year", "coursePiChart-year"));
+        window.coursePiYearChart = bb.generate(getChartData_coursePi(jsData.study_sessions, "year", elemId));
         break;
     case "skillsRadar":
-        window.skillsRadarChart = bb.generate(getChartData_skills(jsData.study_sessions, "skillsRadarChart"));
+        window.skillsRadarChart = bb.generate(getChartData_skills(jsData.study_sessions, elemId));
         break;
     case "durationTimeScatter":
-        window.durationTimeScatterChart = bb.generate(getChartData_durationTime(jsData.study_sessions, "durationTimeScatterChart"));
+        window.durationTimeScatterChart = bb.generate(getChartData_durationTime(jsData.study_sessions, elemId));
         break;
     }
 }
 
-function getChartData_durationTime(study_sessions, elemId){
+function getChartData_durationTime(study_sessions, elemId, allow_course_select=true, only_courses=[]){
     let todayDate = new Date() // this could be changed into a parameter, so that we can show last week, last month
 
     let chartData = JSON.parse(JSON.stringify(durationTime_chartData))
@@ -175,6 +227,7 @@ function getChartData_durationTime(study_sessions, elemId){
 
     let classData = {}
     for(const [c_id, c] of Object.entries(jsData.courses)){
+        if(allow_course_select && window.deselect_classes && (window.deselect_classes.includes(c_id))) continue;
         classData[c_id] = {}
         classData[c_id]["course_name"] = jsData.courses[c_id].course_name
         classData[c_id]["x"] = []
@@ -185,15 +238,20 @@ function getChartData_durationTime(study_sessions, elemId){
     }
 
     for (const study_session of study_sessions) {
+        if(allow_course_select && window.deselect_classes && (window.deselect_classes.includes(study_session.course_id))) continue;
         let session = study_session.session
         let start = new Date(Date.parse(session.start_date))
+        let startDup = new Date(start);
+        startDup.setHours(0, 0, 0, 0);
         let end = new Date(Date.parse(session.end_date))
         classData[study_session.course_id]["y"].push(inHours(start, end))
-        classData[study_session.course_id]["x"].push(Math.round(start.getTime()/36000)/100)
+        classData[study_session.course_id]["x"].push(inHours(startDup, start))
     }
 
     for(const [c_id, c] of Object.entries(classData)){
         chartData.data.xs[c.course_name] = c.course_name+"_x"
+        if(only_courses.length > 0 && !only_courses.includes(c_id)) continue;
+        
 
         chartData.data.columns.push([c.course_name+"_x", ...c.x])
         chartData.data.columns.push([c.course_name, ...c.y])
@@ -202,7 +260,7 @@ function getChartData_durationTime(study_sessions, elemId){
     return chartData
 }
 
-function getChartData_skills(study_sessions, elemId){
+function getChartData_skills(study_sessions, elemId, allow_course_select=true, only_courses=[]){
     let todayDate = new Date() // this could be changed into a parameter, so that we can show last week, last month
 
     let chartData = JSON.parse(JSON.stringify(skills_chartData))
@@ -210,6 +268,8 @@ function getChartData_skills(study_sessions, elemId){
 
     let classData = {}
     for(const [c_id, c] of Object.entries(jsData.courses)){
+        if(allow_course_select && window.deselect_classes && (window.deselect_classes.includes(c_id))) continue;
+
         classData[c_id] = {}
         classData[c_id]["course_name"] = jsData.courses[c_id].course_name
         classData[c_id]["avgDuration"] = 0
@@ -221,6 +281,7 @@ function getChartData_skills(study_sessions, elemId){
     }
 
     for (const study_session of study_sessions) {
+        if(allow_course_select && window.deselect_classes && (window.deselect_classes.includes(study_session.course_id))) continue;
         let session = study_session.session
         let start = new Date(Date.parse(session.start_date))
         let end = new Date(Date.parse(session.end_date))
@@ -242,6 +303,8 @@ function getChartData_skills(study_sessions, elemId){
     }
 
     for(const key of Object.keys(classData)){
+        if(only_courses.length > 0 && !only_courses.includes(c_id)) continue;
+
         let numOfSessions = classData[key]["numOfSessions"]
         let avgDuration = classData[key]["avgDuration"] / numOfSessions
         let avgTimeOfStudy = classData[key]["avgTimeOfStudy"] / numOfSessions
@@ -249,23 +312,29 @@ function getChartData_skills(study_sessions, elemId){
         avgDuration = Math.round(avgDuration/maxavgDuration*100)/100
         avgTimeOfStudy = Math.round(avgTimeOfStudy/maxavgTimeOfStudy*100)/100
 
+        // if(allow_course_select && window.deselect_classes && (window.deselect_classes.includes(key))) {
+        //     chartData.data.columns.push([classData[key]["course_name"], 0, 0]);
+        //     continue;
+        // }
         chartData.data.columns.push([classData[key]["course_name"], avgDuration, numOfSessions, avgTimeOfStudy])
     }
 
     return chartData
 }
 
-function getChartData_coursePi(study_sessions, type, elemId){
+function getChartData_coursePi(study_sessions, type, elemId, allow_course_select=true, only_courses=[]){
     let todayDate = new Date() // this could be changed into a parameter, so that we can show last week, last month
 
     let chartData = JSON.parse(JSON.stringify(coursePi_chartData))
-    if(type == "week" || type == "year") chartData['donut']['label']['show'] = false
+    if(type == "month" || type == "year") chartData['donut']['label']['show'] = false
     chartData['tooltip']['format']['value'] = function(value, ratio, id) { return value+"h";}
     chartData["bindto"] = "#"+elemId
     chartData["donut"]["title"] = type
 
     let classData = {}
     for(const [c_id, c] of Object.entries(jsData.courses)){
+        if(allow_course_select && window.deselect_classes && (window.deselect_classes.includes(c_id))) continue;
+
         classData[c_id] = {}
         classData[c_id]["total"] = 0
         classData[c_id]["course_name"] = jsData.courses[c_id].course_name
@@ -275,6 +344,8 @@ function getChartData_coursePi(study_sessions, type, elemId){
     }
 
     for (const study_session of study_sessions) {
+        if(allow_course_select && window.deselect_classes && (window.deselect_classes.includes(study_session.course_id))) continue;
+
         let session = study_session.session
         let start = new Date(Date.parse(session.start_date))
         switch(type){
@@ -294,6 +365,12 @@ function getChartData_coursePi(study_sessions, type, elemId){
 
     let if_all_zero = true;
     for(const [c_id, c] of Object.entries(classData)){
+        if(only_courses.length > 0 && !only_courses.includes(c_id)) continue;
+        // if(allow_course_select && window.deselect_classes && (window.deselect_classes.includes(c_id))) {
+        //     chartData["data"]["columns"].push([c.course_name, 0])
+        //     continue
+        // }
+
         if(c["total"] > 0) if_all_zero = false;
         else continue;
         chartData["data"]["columns"].push([c.course_name, c["total"]])
@@ -308,7 +385,7 @@ function getChartData_coursePi(study_sessions, type, elemId){
     return chartData
 }
 
-function getChartData_timeBar(study_sessions, daysInBar, totalBars, chartType, elemId){ //chartType 
+function getChartData_timeBar(study_sessions, daysInBar, totalBars, chartType, elemId, allow_course_select=true, only_courses=[]){ //chartType 
     let todayDate = new Date() // this could be changed into a parameter, so that we can show last week, last month
 
     let chartData = JSON.parse(JSON.stringify(timeBar_chartData))
@@ -336,6 +413,8 @@ function getChartData_timeBar(study_sessions, daysInBar, totalBars, chartType, e
     let total_days = new Array(Math.round(totalBars/daysInBar)).fill(0)
     let classData = {}
     for(const [c_id, c] of Object.entries(jsData.courses)){
+        if(allow_course_select && window.deselect_classes && (window.deselect_classes.includes(c_id))) continue;
+
         classData[c_id] = {}
         classData[c_id]["total_each_day"] = new Array(Math.round(totalBars/daysInBar)).fill(0)
         classData[c_id]["course_name"] = jsData.courses[c_id].course_name
@@ -345,6 +424,8 @@ function getChartData_timeBar(study_sessions, daysInBar, totalBars, chartType, e
         //chartData["columns"]["color"].append({classData[c_id]["course_name"]: "#fffff"})
     }
     for (const session of study_sessions) {
+        if(allow_course_select && window.deselect_classes && (window.deselect_classes.includes(session.course_id))) continue;
+
         let start = new Date(Date.parse(session["session"].start_date))
         let dayIndex = -1
         switch(chartType){
@@ -369,7 +450,12 @@ function getChartData_timeBar(study_sessions, daysInBar, totalBars, chartType, e
         classData[session.course_id]["total_each_day"][dayIndex] += duration
         total_days[dayIndex] += duration
     }
-    for (const [_, cData] of Object.entries(classData)){
+    for (const [c_id, cData] of Object.entries(classData)){
+        if(only_courses.length > 0 && !only_courses.includes(c_id)) continue;
+        // if(allow_course_select && window.deselect_classes && (window.deselect_classes.includes(c_id))) {
+        //     chartData["data"]["columns"].push([cData.course_name, ...(new Array(Math.round(totalBars/daysInBar)).fill(0))])
+        //     continue;
+        // }
         chartData["data"]["columns"].push([cData.course_name, ...cData["total_each_day"]])
     }
 
@@ -378,7 +464,7 @@ function getChartData_timeBar(study_sessions, daysInBar, totalBars, chartType, e
     return chartData
 }
 
-function getChartData_dayChart(study_sessions, elemId){
+function getChartData_dayChart(study_sessions, elemId, allow_course_select=true, only_courses=[]){
     let todayDate = new Date() // this could be changed into a parameter, so that we can show last week, last month
 
     let chartData = JSON.parse(JSON.stringify(dayChart_chartData))
