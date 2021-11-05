@@ -84,8 +84,36 @@ def add_course(request):
 
 
 def list(request):
-    courses = Course.objects.all()
-    context = {'courses': courses}
+    courses = [c for c in Course.objects.all()]
+    courses = sorted(courses, key=lambda c: c.course_name)
+    now = datetime.utcnow();
+    jsData = {
+        "study_sessions": [],
+        "courses": {},
+    }
+    for c in courses:
+        c_study_sessions = queries.get_study_sessions_byType(c.id, now, "year")
+        jsData["courses"][c.id] = {
+            "id": c.id,
+            "course_name": c.course_name,
+            "date_added": str(c.date_added),
+        }
+        for ss in c_study_sessions:
+            jsData["study_sessions"].append({
+                "course_name": c.course_name,
+                "course_id": c.id,
+                'session': {
+                    'id': ss.id,
+                    'start_date': str(ss.start_date),
+                    'end_date': str(ss.end_date),
+                    'last_ping': str(ss.last_ping),
+                    'duration': ss.duration
+                },
+            })
+    context = {
+        'courses': courses,
+        'jsData': jsData,
+    }
     return render(request, 'courses/list.html', context=context)
 
 
