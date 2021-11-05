@@ -2,62 +2,70 @@
 {% load static %}
 {% block page-title %}Study Session{% endblock %}
 {% block content %}
-{% include 'partials/_sidebar.html' %}
+    {% include 'partials/_sidebar.html' %}
 
-<link rel="stylesheet" type="text/css" href="{% static 'css/session.css' %}">
-<script src="{% static 'courses/session.js' %}"></script>
-<div style="flex-grow: 20; overflow-x: hidden; position: relative;">
-{% include 'partials/_postitBackground.html' %}
-<div style="padding: 30px;">
-    <div id="start-session-div" class="box session_div_box" style="display: {% if jsData.ongoing_session %} none {% else %} block {% endif %};">
-        <h1 style="margin-bottom: 37px;">Select a course to study for:</h1>
-        {% if courses %}
-            <form action="{% url 'api:api_session' %}" method="post" style="align-items: center; justify-content: center; display: flex; flex-direction: column;">
-                {% csrf_token %}
-                <div style="margin-bottom: 15px; font-size: 21px !important;">{{ form }}</div>
-                <input class="btn btn-success" type="button" value="Start" onclick="start_session();" style="font-size: 19px; color: #50b150;">
-            </form>
+    <link rel="stylesheet" type="text/css" href="{% static 'css/session.css' %}">
+    <script src="{% static 'courses/session.js' %}"></script>
+    <div style="flex-grow: 20; overflow-x: hidden; position: relative;">
+        {% include 'partials/_postitBackground.html' %}
+        <div style="padding: 30px;">
+            <div id="start-session-div" class="box session_div_box"
+                 style="display: {% if jsData.ongoing_session %} none {% else %} block {% endif %};">
+                <h1 style="margin-bottom: 37px;">Select a course to study for:</h1>
+                {% if courses %}
+                    <form action="{% url 'courses:session_timer' %}" method="post"
+                          style="align-items: center; justify-content: center; display: flex; flex-direction: column;">
+                        {% csrf_token %}
+                        {#                <div style="margin-bottom: 15px; font-size: 21px !important;">{{ form }}</div>#}
 
-            {% comment %} <form action="{% url 'courses:session' %}" method='post'>
-                {% csrf_token %}
+                        {% comment %} The name of the select tag is the key the handler is expecting {%  endcomment %}
+                        <select name="courseId" required>
+                            {% for c in courses %}
+                                <option value={{ c.id }}>{{ c.course_name }}</option>
+                            {% endfor %}
+                        </select>
+                        <input type="submit" value="SUBMIT">
 
-                {% for c in courses %}
-                    <div>
-                        <input type="radio" id="{{ c.id }}" value="{{ c.id }}">
-                        <label for="{{ c.id }}">{{ c.course_name }}</label>
-                        <input type="submit" value="Start">
+                        <input class="btn btn-success" type="button" value="Start" onclick="start_session();"
+                               style="font-size: 19px; color: #50b150;">
+                    </form>
 
+                {% else %}
+                    <p>You don't have any courses yet. Create a course on your home page first.</p>
+                {% endif %}
+            </div>
+            <div id="ongoing-session-div" class="box session_div_box"
+                 style="display: {% if jsData.ongoing_session %} block {% else %} none {% endif %};">
+                <h1 id="session-course-name" style="padding-left: 14px; margin-bottom: 4px">
+                    {% if jsData.ongoing_course_id %} {{ jsData.ongoing_course_id }} {% endif %}</h1>
+                <p class="sub" style="padding-left: 16px;">since <span id="since-time-str">00:00</span></p>
+
+                <div style="margin: auto; padding: 14px 5px;">
+                    <h1 id="timerBig" style="text-align: center;" data-timerType="countdown">25:00</h1><h4
+                        style="text-align: center; "><span id="timerSpanBig">Podormo Timer</span></h4>
+                </div>
+                <label style="text-align:right; display: inline-block; float: right;"><span
+                        id="timerSpanSmall">Elapsed</span>: <label id="timerSmall"
+                                                                   data-timerType="countup">00:00</label></label>
+                <br>
+                <br>
+                <div>
+                    <button onclick="endSession()">End session</button>
+                    <div style="float: right;">
+                        <span title="Swap the places of elapsed and podormo timer"><button
+                                style="background-color: #efefef;" onclick="swapTimer()"
+                                id="swapTimer">🔀 Swap Timer</button></span>
+                        <span title="It will assign breaks automatically, every 25 minutes for 5 minutes"><button
+                                style="background-color: #efefef;" onclick="toggleAutoPodormo()" id="autoPodormo"
+                                data-toggle="false">Auto Podormo</button>
                     </div>
-                {% endfor %}
+                </div>
 
-            </form> {% endcomment %}
-        {% else %}
-            <p>You don't have any courses yet. Create a course on your home page first.</p>
-        {% endif %}
-    </div>
-    <div id="ongoing-session-div" class="box session_div_box" style="display: {% if jsData.ongoing_session %} block {% else %} none {% endif %};">
-        <h1 id="session-course-name" style="padding-left: 14px; margin-bottom: 4px">{% if jsData.ongoing_course_id %} {{ jsData.ongoing_course_id }} {% endif %}</h1>
-        <p class="sub" style="padding-left: 16px;">since <span id="since-time-str">00:00</span></p>
-
-        <div style="margin: auto; padding: 14px 5px;">
-            <h1 id="timerBig" style="text-align: center;" data-timerType="countdown">25:00</h1><h4 style="text-align: center; "><span id="timerSpanBig">Podormo Timer</span></h4>
-        </div>
-        <label style="text-align:right; display: inline-block; float: right;"><span id="timerSpanSmall">Elapsed</span>: <label id="timerSmall" data-timerType="countup">00:00</label></label>
-        <br>
-        <br>
-        <div>
-            <button onclick="endSession()">End session</button>
-            <div style="float: right;">
-                <span title="Swap the places of elapsed and podormo timer"><button style="background-color: #efefef;" onclick="swapTimer()" id="swapTimer">🔀 Swap Timer</button></span>
-                <span title="It will assign breaks automatically, every 25 minutes for 5 minutes"><button style="background-color: #efefef;" onclick="toggleAutoPodormo()" id="autoPodormo" data-toggle="false">Auto Podormo</button>
+                <script>
+                </script>
             </div>
         </div>
-
-        <script>
-        </script>
     </div>
-</div>
-</div>
 
 
 {% endblock %}

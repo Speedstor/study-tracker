@@ -11,4 +11,5 @@ urlpatterns = [
     path('list/', views.list, name='list'),
     path('integrations/', views.integrations, name='integrations'),
     path('analytics/', views.analytics, name='analytics'),
+    path('session_timer/', views.timer, name='session_timer'),
 ]

@@ -1,0 +1,10 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block page-title %}Session Timer{% endblock %}
+{% block content %}
+    <script type="text/javascript" src="{% static 'courses/session.js' %}"></script>
+{%  endblock %}
+
+<body onload="start_session()">
+Text body
+</body>
