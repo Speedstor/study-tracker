@@ -17,16 +17,10 @@ Including another URLconf
 
 from django.contrib import admin
 from django.urls import include, path
-from django.views.generic import TemplateView
-
 admin.site.header = "hello spongebob"
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('courses/', include('courses.urls')),
     path('api/', include('courses.api.urls')),
-    path('customAuth/', include('customAuth.urls')),
-
-    # path('accounts/', include('django.contrib.auth.urls')),  # new
-    # path('', TemplateView.as_view(template_name='home.html'), name='home'),  # new
 
 ]
