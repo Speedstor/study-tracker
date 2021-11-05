@@ -1,0 +1,207 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block page-title %}Study Tracker (UCSD){% endblock %}
+{% block content %}
+    <script type="text/javascript" src="{% static 'courses/dashboard.js' %}"></script>
+    <script type="text/javascript" src="{% static 'courses/loadGraphs.js' %}"></script>
+    <script type="text/javascript" src="{% static 'courses/class_filter_checkbox.js' %}"></script>
+
+    {% include 'partials/_sidebar.html' %}
+    <div style="flex-grow: 20; overflow-x: hidden; position: relative;">
+        {% include 'partials/_postitBackground.html' %}
+        <div style="padding: 40px; padding-left: 7vw; max-width: 900px;">
+            <div style="padding-left: 70px; margin-bottom: 40px;">
+                <h1>Integrations <small>- automatically start sessions</small></h1>
+                    <ul style="margin: 40px 0px 30px 0px;">
+
+                    <h4><u>Try out our browser extensions</u></h4>
+
+                    <div>
+                        <button style="">
+                        <img style="height: 60px" src="{% static 'src/icons/chrome-web-store.png' %}">
+                        </button>
+                        <button style="">
+                        <img style="height: 60px" src="{% static 'src/icons/firefox.png' %}"> Avaliable in Firefox
+                        </button>
+                        <button style="">
+                        <img style="height: 60px" src="{% static 'src/icons/opera.png' %}"> Avaliable in opera
+                        </button>
+                        <button style="">
+                        <img style="height: 60px" src="{% static 'src/icons/edge.png' %}"> Avaliable in edge
+                        </button>
+                        <button style="">
+                        <img style="height: 60px" src="{% static 'src/icons/safari.png' %}"> Avaliable in safari
+                        </button>
+                        <button style="">
+                        <img style="height: 60px" src="{% static 'src/icons/brave.png' %}"> Avaliable in brave
+                        </button>
+                    
+                    </div>
+
+                    <br/>
+                    <br/>
+                    <h4>~ or ~</h4>
+                    <br/>
+
+
+                    <h4><u>Link your account</u></h4>
+                    <table class="table table-hover">
+                    <thead>
+                        <tr>
+                        <th scope="col" colspan="2" style="text-align: left;">Google</th>
+                        <th scope="col" style="width: 50px;">Enable</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                        <th scope="col" style="width: 110px; padding-left: 10px;"><img style="height: 30px" src="{% static 'src/icons/googledrive.png' %}"></th>
+                        <th scope="col">Google Drive</th>
+                        <th scope="col" style="width: 50px; text-align: center;"><button style="btn-green">link</button></th>
+                        </tr>
+                        <tr>
+                        <th scope="col" style="width: 110px; padding-left: 40px;"><img style="height: 30px" src="{% static 'src/icons/googledoc.png' %}"></th>
+                        <th scope="col">Docs</th>
+                        <th scope="col" style="width: 50px; text-align: center;"><input type="checkbox"/></th>
+                        </tr>
+                        <tr>
+                        <th scope="col" style="width: 110px; padding-left: 40px;"><img style="height: 30px" src="{% static 'src/icons/googleslides.png' %}"></th>
+                        <th scope="col">Slides</th>
+                        <th scope="col" style="width: 50px; text-align: center;"><input type="checkbox"/></th>
+                        </tr>
+                        <tr>
+                        <th scope="col" style="width: 110px; padding-left: 40px;"><img style="height: 30px" src="{% static 'src/icons/googlesheet.png' %}"></th>
+                        <th scope="col">Sheets</th>
+                        <th scope="col" style="width: 50px; text-align: center;"><input type="checkbox"/></th>
+                        </tr>
+
+                    </tbody>
+                    </table>
+                    </ul>
+
+                    <ul style="margin: 80px 0px 30px 0px;">
+                    <table class="table table-hover">
+                    <thead>
+                        <tr>
+                        <th scope="col" colspan="2" style="text-align: left;">Microsoft</th>
+                        <th scope="col" style="width: 50px;">Enable</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                        <th scope="col" style="width: 110px; padding-left: 10px;"><img style="height: 30px" src="{% static 'src/icons/onedrive.png' %}"></th>
+                        <th scope="col">Onedrive</th>
+                        <th scope="col" style="width: 50px; text-align: center;"><button style="btn-green">link</button></th>
+                        </tr>
+                        <tr>
+                        <th scope="col" style="width: 110px; padding-left: 40px;"><img style="height: 30px" src="{% static 'src/icons/googledoc.png' %}"></th>
+                        <th scope="col">Onenote</th>
+                        <th scope="col" style="width: 50px; text-align: center;"><input type="checkbox"/></th>
+                        </tr>
+                        <tr>
+                        <th scope="col" style="width: 110px; padding-left: 40px;"><img style="height: 30px" src="{% static 'src/icons/googleslides.png' %}"></th>
+                        <th scope="col">Word</th>
+                        <th scope="col" style="width: 50px; text-align: center;"><input type="checkbox"/></th>
+                        </tr>
+                        <tr>
+                        <th scope="col" style="width: 110px; padding-left: 40px;"><img style="height: 30px" src="{% static 'src/icons/googlesheet.png' %}"></th>
+                        <th scope="col">Powerpoint</th>
+                        <th scope="col" style="width: 50px; text-align: center;"><input type="checkbox"/></th>
+                        </tr>
+
+                    </tbody>
+                    </table>
+                    </ul>
+            </div>
+        </div>
+    </div>
+        <!-- Modal -->
+        <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                ...
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary">Save changes</button>
+            </div>
+            </div>
+        </div>
+        </div>
+
+    
+{% endblock %}
+
+
+{% block models %}
+
+<script type="text/javascript" src="{% static 'courses/list.js' %}"></script>
+<div id="urlModel" class="modal">
+    <!-- Modal content -->
+    <div class="modal-content box">
+        <div class="box-content">
+            <button class="close" onclick="cancelDelete()" style="margin-top: -11px; position:relative; float:right;">&times;</button>
+            <div style="padding-left: 20px; padding-bottom: 10px;">
+                <h4>Are you sure to delete?</h4>
+                <div class="separator"></div>
+                <p>This action cannot be undone. All the data that had been acumulated within this course would not be accessible. It will permanently delete this course from your data, and will have no reference to it anymore.</p>
+                <br/>
+                <p>You might want to considering <u>archiving</u> a course if it is just a new quater.</p>
+                <br/>
+                <p>If you really want to delete the course, please type <b id="type-to-confirm">username/course</b></p>
+                <input id="copy-to-confirm" type="url" placeholder="copy to confirm" value="" data-setting-for=""/>
+            </div>
+            <div style="display: inline; float: right; position: relative;">
+                <button class="btn" style="margin-bottom: 7px; margin-right: 13px;" onclick="cancelDelete()">Cancel</button>
+                <button class="btn b-red" style="margin-bottom: 7px; margin-right: 13px;" onclick="deleteCourse()">Confirm & Delete</button>
+            </div>
+        </div>
+    </div>
+</div>
+<style>
+/* The Modal (background) */
+.modal {
+  display: none; /* Hidden by default */
+  position: fixed; /* Stay in place */
+  z-index: 1; /* Sit on top */
+  padding-top: 100px; /* Location of the box */
+  left: 0;
+  top: 0;
+  width: 100%; /* Full width */
+  height: 100%; /* Full height */
+  overflow: auto; /* Enable scroll if needed */
+  background-color: rgb(0,0,0); /* Fallback color */
+  background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+}
+
+/* Modal Content */
+.modal-content {
+  background-color: #fefefe;
+  margin: auto;
+  padding: 20px;
+  border: 1px solid #888;
+  max-width: 613px;
+}
+
+/* The Close Button */
+.close {
+  color: #aaaaaa;
+  float: right;
+  font-size: 28px;
+  font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+  color: #000;
+  text-decoration: none;
+  cursor: pointer;
+}
+</style>
+{% endblock%}
