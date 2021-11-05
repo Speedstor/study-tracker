@@ -1,4 +1,5 @@
-__pycache__/*
+main/__pycache__
+courses/__pycache__
 db.sqlite3
 db.sqlite3.old
 .VSCodeCounter
