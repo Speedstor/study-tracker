@@ -1,6 +1,6 @@
 <nav style="border-bottom: 1px solid grey; display: flex; height: 63px; width: 100vw; box-sizing: border-box; padding: 0px 20px; background: white; align-items: center; justify-content: center;">
     <h3 class="tempLogo"><a href="{% url 'courses:index' %}" style="color: black; text-decoration: none;">Study Tracker</a></h3>
     <div style="flex-grow: 3;"></div>
-    <button class="btn btn-green">Login</button>
+    <a class="btn btn-green" href="{% url 'customAuth:handle_logout'%}">Logout</a>
     <!-- TODO: Change login to logout and other stuff-->
 </nav>

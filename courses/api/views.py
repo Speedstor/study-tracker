@@ -24,6 +24,7 @@ def session(request):
             # Save the course id in session storage
             request.session['course_id'] = int(request.POST['courseId'])
         if not request.session.get('course_id', None):
+            print('did not find course ID')
             return JsonResponse(status=404, data={'status': "course id is not set yet"})
 
         # Check if the client has indicated the session status

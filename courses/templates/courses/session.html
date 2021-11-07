@@ -13,18 +13,17 @@
                  style="display: {% if jsData.ongoing_session %} none {% else %} block {% endif %};">
                 <h1 style="margin-bottom: 37px;">Select a course to study for:</h1>
                 {% if courses %}
-                    <form action="{% url 'courses:session_timer' %}" method="post"
+                    <form action="{% url 'courses:session' %}" method="post"
                           style="align-items: center; justify-content: center; display: flex; flex-direction: column;">
                         {% csrf_token %}
                         {#                <div style="margin-bottom: 15px; font-size: 21px !important;">{{ form }}</div>#}
 
                         {% comment %} The name of the select tag is the key the handler is expecting {%  endcomment %}
-                        <select name="courseId" required>
+                        <select id="id_course" name="id_course" required>
                             {% for c in courses %}
                                 <option value={{ c.id }}>{{ c.course_name }}</option>
                             {% endfor %}
                         </select>
-                        <input type="submit" value="SUBMIT">
 
                         <input class="btn btn-success" type="button" value="Start" onclick="start_session();"
                                style="font-size: 19px; color: #50b150;">
