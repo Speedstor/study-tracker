@@ -240,3 +240,6 @@ def analytics(request):
         'jsData': jsData,
     }
     return render(request, 'courses/analytics.html', context=context)
+
+def settings(request):
+    return HttpResponse("asdf")
