@@ -120,7 +120,6 @@ def list(request):
 def integrations(request):
     courses = [c for c in Course.objects.all()]
     courses = sorted(courses, key=lambda c: c.course_name)
-    now = datetime.utcnow();
     jsData = {
         "study_sessions": [],
         "courses": {},
@@ -136,6 +135,26 @@ def integrations(request):
         'jsData': jsData,
     }
     return render(request, 'courses/integrations.html', context=context)
+
+    
+def settings(request):
+    courses = [c for c in Course.objects.all()]
+    courses = sorted(courses, key=lambda c: c.course_name)
+    jsData = {
+        "study_sessions": [],
+        "courses": {},
+    }
+    for c in courses:
+        jsData["courses"][c.id] = {
+            "id": c.id,
+            "course_name": c.course_name,
+            "date_added": str(c.date_added),
+        }
+    context = {
+        'courses': courses,
+        'jsData': jsData,
+    }
+    return render(request, 'courses/settings.html', context=context)
 
 # !! Old code changed, moved to api/session, to change/create/end session -> need to use api/session instead
 # View for a study session with timer
