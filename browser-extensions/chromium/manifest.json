@@ -1,0 +1,23 @@
+{
+  "manifest_version": 2,
+
+  "name": "Study Tracker",
+  "description": "",
+  "version": "0.0.1",
+  "background": {
+    "scripts": ["/src/background.js"]
+  },
+  "content_scripts": [
+    {
+      "matches": ["*://*/**"],
+      "css": ["/src/css/override.css"],
+      "js": ["/src/studyTracker_contentScript.js"]
+    }
+  ],
+  "browser_action": { "default_popup": "/popup/popup.html" },
+  "permissions": [
+    "input",
+    "storage"
+  ],
+  "content_security_policy": "script-src 'self' https://cdn.mxpnl.com; object-src 'self'"
+}

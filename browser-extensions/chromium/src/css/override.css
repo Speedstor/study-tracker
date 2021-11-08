@@ -1,0 +1,16 @@
+img.yt-img-shadow {
+    width: 0px !important;
+}
+
+#video-title {
+    background: white !important;
+    opacity: 0;
+}
+
+#mouseover-overlay {
+    opacity: 0.01 !important;
+}
+
+a.yt-simple-endpoint, yt-formatted-string#text{
+    opacity: 0;
+}
