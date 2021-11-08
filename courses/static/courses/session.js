@@ -126,6 +126,7 @@ function continue_session() {
 function notifySessionStarted() {
     console.log("In notifySessionStarted")
     let params = "sessionStatus=started&courseId="+document.getElementById("id_course").value
+
     const req = new XMLHttpRequest();
     req.open("POST", apiSessionUrl);
     req.setRequestHeader("Content-type", "application/x-www-form-urlencoded");

@@ -4,6 +4,7 @@
 {% block content %}
     {% include 'partials/_sidebar.html' %}
 
+
     <link rel="stylesheet" type="text/css" href="{% static 'css/session.css' %}">
     <script src="{% static 'courses/session.js' %}"></script>
     <div style="flex-grow: 20; overflow-x: hidden; position: relative;">
@@ -57,14 +58,8 @@
                         <span title="It will assign breaks automatically, every 25 minutes for 5 minutes"><button
                                 style="background-color: #efefef;" onclick="toggleAutoPodormo()" id="autoPodormo"
                                 data-toggle="false">Auto Podormo</button>
+                        </span>
                     </div>
                 </div>
-
-                <script>
-                </script>
-            </div>
-        </div>
-    </div>
-
 
 {% endblock %}

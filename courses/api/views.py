@@ -1,4 +1,3 @@
-from django.contrib.auth.decorators import login_required
 from django.shortcuts import render
 from django.urls import reverse
 from django.utils import timezone
@@ -13,20 +12,14 @@ from datetime import datetime
 
 
 @csrf_exempt
-@login_required
 # View for a study session with timer
 def session(request):
-    print('new session called')
     if request.method == 'POST':
-        for k, v in request.POST.items():
-            print(k, v)
-        if 'courseId' in request.POST:
+        if 'course' in request.POST:
             # Save the course id in session storage
-            request.session['course_id'] = int(request.POST['courseId'])
-        if not request.session.get('course_id', None):
-            print('did not find course ID')
+            request.session['course_id'] = int(request.POST['course'])
+        if not request.session['course_id']:
             return JsonResponse(status=404, data={'status': "course id is not set yet"})
-
         # Check if the client has indicated the session status
         if 'sessionStatus' in request.POST:
             session_status = request.POST['sessionStatus']
@@ -43,6 +36,7 @@ def session(request):
                 request.session['session_id'] = study_session.id
                 return JsonResponse(status=201, data={'status': "success"})
             elif session_status == 'ping':
+                course_id = request.session['course_id']
                 study_session = StudySession.objects.get(pk=request.session['session_id'])
                 study_session.last_ping = timezone.localtime(timezone.now())
                 study_session.set_duration()
@@ -67,6 +61,4 @@ def session(request):
                 return JsonResponse(status=302, data={'redirectURL': redirect_url})
             else:
                 print('sessionStatus unrecognized: ', session_status)
-
-    print('request method is ', request.method)
     return JsonResponse(status=404, data={'status': "bad request"})
