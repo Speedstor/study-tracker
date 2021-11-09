@@ -15,6 +15,8 @@ from .models import Course, StudySession
 from .forms import CourseForm
 from . import queries
 
+from main.settings import STUDY_SESSION_END_TIMEOUT, STUDY_SESSION_END_FORCE_SET_PING_WIGGLE_ROOM
+
 from datetime import datetime
 
 
@@ -162,11 +164,9 @@ def session(request):
     courses = sorted(courses, key=lambda c: c.course_name)
     print('session courses: ', courses)
     ongoing_session = None
+    ongoing_course_id = None
 
     # these two variables should be in user settings || or be apple, and take the best settings and force it on the user, but still, it should be in a setting with constants, either in code, or from a settings file
-    study_session_end_timeout = 90
-    study_session_end_force_set_ping_wiggle_room = 12
-
     try:
         last_study_session = StudySession.objects.latest('start_date')
         if last_study_session.start_date.strftime('%Y-%m-%d %H:%M:%S') == last_study_session.end_date.strftime(
@@ -174,13 +174,14 @@ def session(request):
             print(last_study_session.start_date.strftime('%Y-%m-%d %H:%M:%S'))
             print((timezone.localtime(timezone.now()) - last_study_session.last_ping).total_seconds() / 60)
             if (timezone.localtime(
-                    timezone.now()) - last_study_session.last_ping).total_seconds() / 60 > study_session_end_timeout:
+                    timezone.now()) - last_study_session.last_ping).total_seconds() / 60 > STUDY_SESSION_END_TIMEOUT:
                 # there is an ongoing session that had not been stopped for 90 minutes (study_sesion_end_timeout minutes), we should stop it and say no ongoing_session
                 last_study_session.end_date = last_study_session.last_ping + timezone.timedelta(
-                    minutes=study_session_end_force_set_ping_wiggle_room)
+                    minutes=STUDY_SESSION_END_FORCE_SET_PING_WIGGLE_ROOM)
                 last_study_session.set_duration()
                 last_study_session.save()
             else:
+                ongoing_course_id = last_study_session.course.id
                 ongoing_session = serializers.serialize("json", [last_study_session])
         else:
             pass  # there is no ongoing session
@@ -197,8 +198,8 @@ def session(request):
     context = {'courses': courses, "jsData": jsData}
     if ongoing_session != None:
         context["jsData"]["ongoing_session"] = ongoing_session
-        if request.session['course_id']:
-            context["jsData"]["ongoing_course_id"] = request.session['course_id']
+        context["jsData"]["ongoing_course_id"] = ongoing_course_id
+        # if request.session['course_id']:
     return render(request, 'courses/session.html', context=context)
 
 

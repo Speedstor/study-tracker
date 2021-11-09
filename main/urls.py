@@ -21,7 +21,7 @@ admin.site.header = "hello spongebob"
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('courses/', include('courses.urls')),
-    path('api/', include('courses.api.urls')),
+    path('api/', include('api.urls')),
     path('customAuth/', include('customAuth.urls')),
 
 ]

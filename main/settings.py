@@ -132,3 +132,7 @@ STATIC_URL = '/static/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 LOGIN_URL = reverse_lazy('customAuth:index')
+
+
+STUDY_SESSION_END_TIMEOUT = 90
+STUDY_SESSION_END_FORCE_SET_PING_WIGGLE_ROOM = 12

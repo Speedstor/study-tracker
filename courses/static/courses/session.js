@@ -105,6 +105,7 @@ function continue_session() {
     console.log("continugin")
     if(jsData.hasOwnProperty("ongoing_session")){
         jsData["ongoing_session"] = JSON.parse(jsData["ongoing_session"])[0].fields
+        document.getElementById("id_course").value = jsData.ongoing_course_id
         let ongoing_session = jsData["ongoing_session"]
         if(ongoing_session.start_date != ongoing_session.end_date) {
             document.getElementById("start-session-div").style.display = "block";
@@ -167,7 +168,7 @@ function endSession() {
 }
 
 function notifySessionEnded() {
-    let params = "sessionStatus=ended"
+    let params = "sessionStatus=ended&courseId="+document.getElementById("id_course").value
     const req = new XMLHttpRequest();
     req.open("POST", apiSessionUrl);
     req.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
