@@ -247,7 +247,6 @@ def settings(request):
     # Get this user's courses
     courses = Course.objects.all().filter(user=request.user.id)
 
-    now = datetime.utcnow()
     jsData = {
         "study_sessions": [],
         "courses": {},

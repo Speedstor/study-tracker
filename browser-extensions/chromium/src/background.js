@@ -23,6 +23,9 @@
                 //  items = [ { "phasersTo": "awesome" } ]
             });
         }
+        // else if(message.type == "getDeterminantDiv"){
+        //     let hostname = message.hostname;
+        // }
 
 
         // if (mssage.type == "ping") {
