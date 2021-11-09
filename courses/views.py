@@ -243,4 +243,23 @@ def analytics(request):
     return render(request, 'courses/analytics.html', context=context)
 
 def settings(request):
-    return HttpResponse("asdf")
+    print(request.user.username, request.user.id)
+    # Get this user's courses
+    courses = Course.objects.all().filter(user=request.user.id)
+
+    now = datetime.utcnow()
+    jsData = {
+        "study_sessions": [],
+        "courses": {},
+    }
+    for c in courses:
+        jsData["courses"][c.id] = {
+            "id": c.id,
+            "course_name": c.course_name,
+            "date_added": str(c.date_added),
+        }
+    context = {
+        'courses': courses,
+        'jsData': jsData,
+    }
+    return render(request, 'courses/settings.html', context=context)
