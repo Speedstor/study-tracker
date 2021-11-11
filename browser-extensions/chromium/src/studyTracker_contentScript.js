@@ -15,20 +15,20 @@ function ifStrArrAppearInString(sourceStr, toFindArr){
 
 function parseCourseId(elem){
     let elemText = elem.innerText;
-    for([course_id, stringArr] in Object.entries(window.determinantStrings)){
+    for([course_id, stringArr] in Object.entries(window.identifierStrs)){
         if(ifStrArrAppearInString(elemText, stringArr)) return course_id
         else return -1 // -1 means other for session type
     }
 }
 
 window.addEventListener("load", () => {
-    chrome.storage.sync.get(["loggedIn", "trackSites", "updateInterval", "courseDeterminantDiv", "determinantStrings"], function(items){
+    chrome.storage.sync.get(["loggedIn", "trackSites", "updateInterval", "courseDeterminantDiv", "identifierStrs"], function(items){
         console.log(items)
         if(items.hasOwnProperty("loggedIn") && items.hasOwnProperty("trackSites")){
             let currentSite = window.location.hostname;
             if(!items["trackSites"].includes(currentSite)) return;
 
-            if(items.hasOwnProperty("determinantStrings")) window.determinantStrings = items.determinantStrings
+            if(items.hasOwnProperty("identifierStrs")) window.identifierStrs = items.identifierStrs
 
             let determinantDiv = null;
             if(COURSE_DETERMINANT_DIVS.hasOwnProperty(currentSite)){

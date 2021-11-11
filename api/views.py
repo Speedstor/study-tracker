@@ -6,8 +6,13 @@ from django.http import HttpResponseRedirect, JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.core import serializers
 
+from main.settings import STUDY_SESSION_END_TIMEOUT, STUDY_SESSION_END_FORCE_SET_PING_WIGGLE_ROOM
+
 from courses.models import Course, StudySession
 from courses import queries
+from .models import ExtensionTrackSites, ExtensionIdentifierStr
+
+import pprint
 
 from datetime import datetime
 
@@ -16,6 +21,99 @@ def CORS_JsonResponse(status, data):
     response["Access-Control-Allow-Origin"] = "*"
     response["Access-Control-Allow-Methods"] = "GET, POST, OPTIONS"
     return response
+
+pp = pprint.PrettyPrinter(indent=4)
+
+@csrf_exempt
+def extension_getDayChart(request):
+    courses = Course.objects.all().filter(user=request.user.id)
+
+    now = datetime.utcnow()
+    content = {
+        "study_sessions": [],
+        "courses": {},
+    }
+    for c in courses:
+        c_study_sessions = queries.get_study_sessions_byType(c.id, now, "month")
+        content["courses"][c.id] = {
+            "id": c.id,
+            "course_name": c.course_name,
+            "date_added": str(c.date_added),
+        }
+        for ss in c_study_sessions:
+            content["study_sessions"].append({
+                "course_name": c.course_name,
+                "course_id": c.id,
+                'session': {
+                    'id': ss.id,
+                    'start_date': str(ss.start_date),
+                    'end_date': str(ss.end_date),
+                    'last_ping': str(ss.last_ping),
+                    'duration': ss.duration
+                },
+            })
+    return CORS_JsonResponse(status=202, data=content)
+
+
+@csrf_exempt
+def extension_addTrackSite(request):
+    if request.method == 'POST':
+        if 'site' in request.POST:
+            trackSite = ExtensionTrackSites(user=request.user, siteUrl=request.POST["site"])
+            trackSite.save()
+            return CORS_JsonResponse(status=202, data={"status": True})
+        else:
+            return CORS_JsonResponse(status=402, data={"status": "need site POST parameter"})
+
+@csrf_exempt
+def extension_addIdentifierStr(request):
+    if request.method == 'POST':
+        if 'site' in request.POST and 'course_id' in request.POST and 'identifierStr' in request.POST:
+            identifierStr = ExtensionIdentifierStr(trackSite=ExtensionTrackSites.objects.filter(siteUrl=request.POST['site']),
+                                                course=Course.objects.get(pk=request.POST['course_id']), 
+                                                identifierStr=request.POST["identifierStr"])
+            identifierStr.save()
+            return CORS_JsonResponse(status=202, data={"status": True})
+        else:
+            return CORS_JsonResponse(status=402, data={"status": "need site POST parameter"})
+
+
+@csrf_exempt
+def extension_settings(request):
+    content = {
+        "trackSites": [],
+        "identifierStrs": {},
+        "courses": {}
+    }
+    courses = Course.objects.all().filter(user=request.user.id)
+    for c in courses:
+        content["courses"][c.id] = {
+            "id": c.id,
+            "course_name": c.course_name,
+        }
+
+    trackSites = ExtensionTrackSites.objects.all().filter(user=request.user.id)
+    for site in trackSites:
+        siteUrl = site.siteUrl
+        content["trackSites"].append(siteUrl)
+        identifierStrs = ExtensionIdentifierStr.objects.filter(trackSite=site)
+        content["identifierStrs"][siteUrl] = {}
+        for identifierStr in identifierStrs:
+            course_id = identifierStr.course.id
+            contentStr = identifierStr.identifierStr
+            try:
+                content["identifierStrs"][siteUrl][course_id].append(contentStr)
+            except:
+                content["identifierStrs"][siteUrl][course_id] = [contentStr]
+    return CORS_JsonResponse(status=202, data=content)
+
+@csrf_exempt
+def checkLogin(request):
+    if request.user.is_authenticated:
+        return CORS_JsonResponse(status=201, data={'status': True})
+    else:
+        return CORS_JsonResponse(status=201, data={'status': False})
+
 
 @csrf_exempt
 # View for a study session with timer
@@ -56,14 +154,14 @@ def session(request):
                         print(last_study_session.start_date.strftime('%Y-%m-%d %H:%M:%S'))
                         print((timezone.localtime(timezone.now()) - last_study_session.last_ping).total_seconds() / 60)
                         if (timezone.localtime(
-                                timezone.now()) - last_study_session.last_ping).total_seconds() / 60 > study_session_end_timeout:
+                                timezone.now()) - last_study_session.last_ping).total_seconds() / 60 > STUDY_SESSION_END_TIMEOUT:
                             # there is an ongoing session that had not been stopped for 90 minutes (study_sesion_end_timeout minutes), we should stop it and say no ongoing_session
                             last_study_session.end_date = last_study_session.last_ping + timezone.timedelta(
-                                minutes=study_session_end_force_set_ping_wiggle_room)
+                                minutes=STUDY_SESSION_END_FORCE_SET_PING_WIGGLE_ROOM)
                             last_study_session.set_duration()
                             last_study_session.save()
                         else:
-                            ongoing_session = serializers.serialize("json", [last_study_session])
+                            ongoing_session = last_study_session
                     else:
                         pass  # there is no ongoing session
                 except:
