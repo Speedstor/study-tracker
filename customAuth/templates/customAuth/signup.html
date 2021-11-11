@@ -28,5 +28,13 @@
     </div>
 </form>
 
+<div>
+    {% if signupFailed %}
+        <p>Signup failed. Please try again.</p>
+    {% else %}
+        <p></p>
+    {% endif %}
+</div>
+
 </body>
 </html>

@@ -23,12 +23,18 @@ def handle_signup(request):
     username = request.POST['username']
     email = request.POST['email']
     password = request.POST['password']
-    user = User.objects.create_user(username, email=email, password=password)
-    user.save()
-
-    # Log the user in
-    login(request, user)
-    return HttpResponseRedirect(reverse('courses:index'))
+    # Check if the user already exists in the database
+    try:
+        User.objects.get(username=username)
+    except User.DoesNotExist:
+        user = User.objects.create_user(username, email=email, password=password)
+        user.save()
+        # Log the user in
+        login(request, user)
+        return HttpResponseRedirect(reverse('courses:index'))
+    else:
+        context = {'signupFailed': True}
+        return render(request, 'customAuth/signup.html', context=context)
 
 
 def handle_login(request):
@@ -49,7 +55,8 @@ def handle_login(request):
         return HttpResponseRedirect(reverse('courses:index'))
     # If login failed, redirect to login page
     else:
-        return HttpResponseRedirect(reverse('customAuth:index'))
+        context = {'loginFailed': True}
+        return render(request, 'customAuth/login.html', context=context)
 
 
 def handle_logout(request):

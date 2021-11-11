@@ -9,14 +9,14 @@ class AuthTests(TestCase):
         self.assertRedirects(resp, '/customAuth/?next=/courses/')
 
     def test_login_without_signup(self):
-        # Tests that a login without prior signup redirects to the auth page
+        # Tests that a login without prior signup shows an error message
         data = {
             'username': 'testUser',
             'password': 'testUserPwd123!',
         }
         # Attempt login
         resp = self.client.post(reverse('customAuth:handle_login'), data=data)
-        self.assertRedirects(resp, '/customAuth/')
+        self.assertInHTML('Login failed. Please try again.', str(resp.content))
 
     def test_signup(self):
         # Tests that a signup redirects to the home page
@@ -51,5 +51,20 @@ class AuthTests(TestCase):
         resp = self.client.post(reverse('customAuth:handle_login'), data=data)
         self.assertRedirects(resp, '/courses/')
 
+    def test_duplicate_signup(self):
+        data = {
+            'username': 'testUser',
+            'email': 'testUser@gmail.com',
+            'password': 'testUserPwd123!',
+        }
+        # Attempt signup
+        resp = self.client.post(reverse('customAuth:handle_signup'), data=data)
+        self.assertRedirects(resp, '/courses/')
 
+        # Logout
+        self.client.logout()
+
+        # Attempt signup again - should fail
+        resp = self.client.post(reverse('customAuth:handle_signup'), data=data)
+        self.assertInHTML('Signup failed. Please try again.', str(resp.content))
 
