@@ -1,14 +1,21 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Signup / Login</title>
-</head>
-<body>
-<a href="{% url 'customAuth:handle_signup' %}">Signup</a>
-<br>
-<a href="{% url 'customAuth:handle_login' %}">Login</a>
+{% extends 'base.html' %}
+
+{% load static %}
+{% block page-title %}Welcome to Study Tracker!{% endblock %}
+
+{% block content %}
+
+    <div style="margin-left: 10px; margin-top: 10px">
+        <a href="{% url 'customAuth:handle_signup' %}" class="btn btn-primary"
+           style="font-size: 19px; color: #50b150;">Signup</a>
+    </div>
+
+    <div style="margin-left: 10px; margin-top: 10px">
+        <a href="{% url 'customAuth:handle_login' %}" class="btn btn-primary"
+           style="font-size: 19px; color: #50b150;">Login</a>
+    </div>
 
 
-</body>
-</html>
+{% endblock %}
+
+

@@ -1,32 +1,29 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Login</title>
-</head>
-<body>
+{% extends 'base.html' %}
 
-<form action="{% url 'customAuth:handle_login' %}" method="post" class="form-example">
-    {% csrf_token %}
-    <div class="form-example">
-        <label for="username">Enter your username: </label>
-        <input type="text" name="username" id="username" required>
+{% load static %}
+{% block page-title %}Login to Study Tracker{% endblock %}
+
+{% block content %}
+
+    <link rel="stylesheet" type="text/css" href="{% static 'css/login.css' %}">
+
+    <form action="{% url 'customAuth:handle_login' %}" method="post" class="form-example">
+        {% csrf_token %}
+        <div class="form-example" style="margin-left:20px; margin-top:20px">
+            <input type="text" name="username" id="username" placeholder="Username" required>
+        </div>
+        <div class="form-example" style="margin-left:20px; margin-top:20px">
+            <input type="password" name="password" id="password" placeholder="Password" required>
+        </div>
+        <div class="form-example" style="margin-left:20px; margin-top:20px">
+            <input type="submit" value="Login">
+        </div>
+    </form>
+
+    <div>
+        {% if loginFailed %}
+            <p>Login failed. Please try again.</p>
+        {% endif %}
     </div>
-    <div class="form-example">
-        <label for="password">Enter your password: </label>
-        <input type="password" name="password" id="password" required>
-    </div>
-    <div class="form-example">
-        <input type="submit" value="Login">
-    </div>
-</form>
 
-<div>
-    {% if loginFailed %}
-        <p>Login failed. Please try again.</p>
-    {% endif %}
-</div>
-
-
-</body>
-</html>
+{% endblock %}
