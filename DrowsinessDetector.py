@@ -53,7 +53,7 @@ while cond:
             count += 1
             cv2.putText(frame, "DROWSY", (20, 200), cv2.FONT_HERSHEY_SIMPLEX, 3, (0, 0, 255), 4)
 
-        if count >= 20:
+        if count >= 100:
             cv2.putText(frame, "TAKE A BREAK!", (300, 700), cv2.FONT_HERSHEY_SIMPLEX, 3, (0,0,255), 5)
 
 
