@@ -1,0 +1,129 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block page-title %}Study Tracker (UCSD){% endblock %}
+{% block content %}
+    <script type="text/javascript" src="{% static 'courses/loadGraphs.js' %}"></script>
+    <script type="text/javascript" src="{% static 'courses/class_filter_checkbox.js' %}"></script>
+
+    {% include 'partials/_sidebar.html' %}
+    <div style="flex-grow: 20; overflow-x: hidden; position: relative;">
+        {% include 'partials/_postitBackground.html' %}
+        <div style="padding: 40px;">
+            <div style="display: flex; flex-wrap: wrap; align-items: baseline; margin-bottom: 12px;">
+                <a href="{% url 'courses:list' %}" class="btn btn-sm btn-primary" style="margin-right: 14px;">👈</a>
+                <h1 style="display: inline-block;">{{course_name}} <small style="padding-left: 20px;">Studied total: {{total_time}}h</small></h1>
+                <div style="flex-grow: 2;"></div>
+                <button class="btn btn-primary" style="margin-right: 10px;">Archive</button>
+                <button class="btn btn-primary" onclick="prepareForDelete({{course_id}});">Delete</button>
+            </div>
+            {% comment %} <h3 style="padding-left: 30px;">Total Time: {{total_time}}</h3> {% endcomment %}
+
+            <div class="" id="whiteboard" style="display: grid; grid-template-columns: 14px auto 14px; grid-template-rows: 14px auto 14px; width: 100%; margin-top: 0px;">
+                {% include 'partials/_preWhiteboard.html' %}
+
+                <div style="padding: 13px; background: #fbfbfb; display: flex; flex-direction: column; position: relative;">
+                    <div style="display: flex; flex-wrap: wrap; flex-direction: column; padding: 8px;">
+                    <div style="display: flex; justify-content: space-around; flex-grow: 3; flex-wrap: wrap;">
+
+                        <div class="box dashboard-graphToday" id="graphToday" style="padding: 10px 16px 0px 0px; display: flex; flex-direction: column; max-height: 250px; min-width: 450px; width: 70%; height: 115px; margin-bottom: 24px;">
+                            <h6 class="no-margin center" style="position: absolute; padding-left: 86px;">Today</h6>
+                            <div id="dayChart" style="height: 100%;"></div>
+                        </div>
+                        <div class="box dashboard-graphWeek" id="graphWeek" style="padding: 10px 16px 0px 0px; display: flex; flex-direction: column; max-height: 250px; max-width: 800px; min-width: 450px; width: 47%; height: 230px; margin-top: 4px;">
+                            <h6 class="no-margin center" style="position: absolute; padding-left: 51px;">This week</h6>
+                            <div id="weekChart" style="height: 100%;"></div>
+                        </div>
+                        <div class="box dashboard-graphWeek" id="graphMonth" style="padding: 10px 16px 0px 0px; display: flex; flex-direction: column; max-height: 250px; max-width: 800px; min-width: 450px; width: 47%; height: 230px; margin-top: 4px;">
+                            <h6 class="no-margin center" style="position: absolute; padding-left: 51px;">This Month</h6>
+                            <div id="monthChart" style="height: 100%;"></div>
+                        </div>
+                        <div class="box dashboard-graphWeek" id="graphToday" style="padding: 10px 16px 0px 0px; display: flex; flex-direction: column; max-height: 250px; max-width: 800px; min-width: 450px; width: 47%; height: 230px; margin-top: 4px;">
+                            <h6 class="no-margin center" style="position: absolute; padding-left: 51px;">This Year</h6>
+                            <div id="yearChart" style="height: 100%;"></div>
+                        </div>
+                        <div class="box dashboard-graphToday" id="graphToday" style="padding: 10px 16px 0px 0px; display: flex; flex-direction: column; max-height: 250px; max-width: 800px; min-width: 450px; width: 47%; height: 230px; margin-top: 4px;">
+                            <h6 class="no-margin center" style="position: absolute; padding-left: 86px;">Study duration VS. Time of Day</h6>
+                            <div id="durationTimeScatterChart" style="height: 100%;"></div>
+                        </div>
+                    </div>
+                    </div>
+                </div>
+                    
+                {% include 'partials/_postWhiteboard.html' %}
+            </div>
+        </div>
+    </div>    
+{% endblock %}
+
+
+{% block models %}
+
+<script type="text/javascript" src="{% static 'courses/list.js' %}"></script>
+<div id="urlModel" class="modal">
+    <!-- Modal content -->
+    <div class="modal-content box">
+        <div class="box-content">
+            <button class="close" onclick="cancelDelete()" style="margin-top: -11px; position:relative; float:right;">&times;</button>
+            <form action="{% url 'courses:delete_course' %}" method="POST">
+                {% csrf_token %}
+                <div style="padding-left: 20px; padding-bottom: 10px;">
+                    <h4>Are you sure to delete?</h4>
+                    <div class="separator"></div>
+                    <p>This action cannot be undone. All the data that had been acumulated within this course would not be accessible. It will permanently delete this course from your data, and will have no reference to it anymore.</p>
+                    <br/>
+                    <p>You might want to considering <u>archiving</u> a course if it is just a new quater.</p>
+                    <br/>
+                    <p>If you really want to delete the course, please type <b id="type-to-confirm">username/course</b></p>
+                    <input id="delete-course-id" name="course_id" type="number" value="" data-setting-for="" style="display: none" />
+                    <input name="next" type="text" value="/courses/{{course_id}}/" data-setting-for="" style="display: none" />
+                    <input id="copy-to-confirm" name="confirm_str" type="text" placeholder="copy to confirm" value="" data-setting-for=""/>
+                </div>
+                <div style="display: inline; float: right; position: relative;">
+                    <button class="btn" style="margin-bottom: 7px; margin-right: 13px;" onclick="cancelDelete()">Cancel</button>
+                    <button class="btn b-red" style="margin-bottom: 7px; margin-right: 13px;" type="submit">Confirm & Delete</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<style>
+/* The Modal (background) */
+.modal {
+  display: none; /* Hidden by default */
+  position: fixed; /* Stay in place */
+  z-index: 1; /* Sit on top */
+  padding-top: 100px; /* Location of the box */
+  left: 0;
+  top: 0;
+  width: 100%; /* Full width */
+  height: 100%; /* Full height */
+  overflow: auto; /* Enable scroll if needed */
+  background-color: rgb(0,0,0); /* Fallback color */
+  background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+}
+
+/* Modal Content */
+.modal-content {
+  background-color: #fefefe;
+  margin: auto;
+  padding: 20px;
+  border: 1px solid #888;
+  max-width: 613px;
+}
+
+/* The Close Button */
+.close {
+  color: #aaaaaa;
+  float: right;
+  font-size: 28px;
+  font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+  color: #000;
+  text-decoration: none;
+  cursor: pointer;
+}
+</style>
+{% endblock%}

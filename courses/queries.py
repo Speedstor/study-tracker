@@ -35,7 +35,10 @@ def get_study_sessions_byType(course_id, now, type):
     course = Course.objects.all().get(pk=course_id)
     start = None
     end = None
-    if type == "month":
+    if type == "day":
+        start = now - timezone.timedelta(days=1)
+        end = now
+    elif type == "month":
         start = now - timezone.timedelta(days=30)
         end = now
     elif type == "year":

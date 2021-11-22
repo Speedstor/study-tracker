@@ -23,7 +23,7 @@ div.divider{
   width: 100%;
   border-radius: 10px;
   height: 2px;
-  background: #81c18f;
+  background: #afafaf;
 }
 
 .scrollbar-grey::-webkit-scrollbar{
@@ -72,7 +72,8 @@ div.divider{
 }
 
 .whiteboardContent{
-  padding: 13px; grid-column: 2; grid-row: 2; background: #fbfbfb; display: flex; flex-direction: column;
+  grid-column: 2; grid-row: 2; background: #fbfbfb; display: flex; flex-direction: column;
+  width: 100%;
 }
 
 .extension-title{
@@ -80,7 +81,8 @@ div.divider{
 }
 
 .subTitle-center{
-  text-align: center; margin: 25px 0px 0px 0px;
+  text-align: center;
+  margin: 10px 0px 4px 0px;
 }
 
 .subTitle-left{
@@ -93,6 +95,7 @@ div.divider{
 
 .identifiers-list{
   max-height: 162px; overflow-y: auto; padding-right: 2px; /* border: 1px solid #a1a1a178; border-width: 1px 0px 1px 0px; */ border-radius: 4px;
+  max-width: 300px;
 }
 
 .bottomBtn{
@@ -112,14 +115,19 @@ div.divider{
 }
 
 .identifiers-item{
-  display: flex; flex-direction: row; max-width: 280px; align-items: baseline;
+  display: flex; flex-direction: row; max-width: 275px; align-items: baseline;
+}
+
+.identifiers-add-btn{
+  margin-left: 10px;
+  font-size: 11px;
 }
 
 .trackSites-list {
     border: 1px solid grey;
     border-radius: 10px;
     margin-top: 5px;
-    max-height: 62px;
+    max-height: 79px;
     overflow-y: auto;
 }
 

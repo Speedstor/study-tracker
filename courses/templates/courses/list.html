@@ -96,20 +96,25 @@
     <div class="modal-content box">
         <div class="box-content">
             <button class="close" onclick="cancelDelete()" style="margin-top: -11px; position:relative; float:right;">&times;</button>
-            <div style="padding-left: 20px; padding-bottom: 10px;">
-                <h4>Are you sure to delete?</h4>
-                <div class="separator"></div>
-                <p>This action cannot be undone. All the data that had been acumulated within this course would not be accessible. It will permanently delete this course from your data, and will have no reference to it anymore.</p>
-                <br/>
-                <p>You might want to considering <u>archiving</u> a course if it is just a new quater.</p>
-                <br/>
-                <p>If you really want to delete the course, please type <b id="type-to-confirm">username/course</b></p>
-                <input id="copy-to-confirm" type="url" placeholder="copy to confirm" value="" data-setting-for=""/>
-            </div>
-            <div style="display: inline; float: right; position: relative;">
-                <button class="btn" style="margin-bottom: 7px; margin-right: 13px;" onclick="cancelDelete()">Cancel</button>
-                <button class="btn b-red" style="margin-bottom: 7px; margin-right: 13px;" onclick="deleteCourse()">Confirm & Delete</button>
-            </div>
+            <form action="{% url 'courses:delete_course' %}" method="POST">
+                {% csrf_token %}
+                <div style="padding-left: 20px; padding-bottom: 10px;">
+                    <h4>Are you sure to delete?</h4>
+                    <div class="separator"></div>
+                    <p>This action cannot be undone. All the data that had been acumulated within this course would not be accessible. It will permanently delete this course from your data, and will have no reference to it anymore.</p>
+                    <br/>
+                    <p>You might want to considering <u>archiving</u> a course if it is just a new quater.</p>
+                    <br/>
+                    <p>If you really want to delete the course, please type <b id="type-to-confirm">username/course</b></p>
+                    <input id="delete-course-id" name="course_id" type="number" value="" data-setting-for="" style="display: none" />
+                    <input id="copy-to-confirm" name="confirm_str" type="text" placeholder="copy to confirm" value="" data-setting-for=""/>
+                    <input name="next" type="text" value="/courses/list/" data-setting-for="" style="display: none" />
+                </div>
+                <div style="display: inline; float: right; position: relative;">
+                    <button class="btn" style="margin-bottom: 7px; margin-right: 13px;" onclick="cancelDelete()">Cancel</button>
+                    <button class="btn b-red" style="margin-bottom: 7px; margin-right: 13px;" type="submit">Confirm & Delete</button>
+                </div>
+            </form>
         </div>
     </div>
 </div>

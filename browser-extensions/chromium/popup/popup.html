@@ -16,82 +16,86 @@
 
       
       <div class="whiteboardContent">
-        <h2 class="extension-title">
-          Study Tracker
-        </h2>
-
-        <div style="display: flex; flex-direction: column;">
-          <div style="display: flex; flex-direction: row; height: 67px; width: 100%; margin-top: 10px; justify-content: space-evenly;">
-            <div style="display: flex; flex-direction: column; width: 85px; align-items: center; border-radius: 5px; border: 1px solid rgb(189, 189, 189);">
-              <p style="margin: 0px; margin-top: 8px;">Tracking</p>
-              <h2 style="margin: 0px; margin-top: 10px; text-decoration: none;">6</h2>
-            </div>
-            <div style="display: flex; flex-direction: column; align-items: center; justify-content: center;">
-              <button id="btnAddCurrentCourse" class="" style="margin-bottom: 4px;">+ Track Site</button>
-              <button id="btnAddCurrentCourse" class="">Edit</button>
-            </div>
-            <div style="display: flex; flex-direction: column; width: 85px; align-items: center; border-radius: 5px; border: 1px solid rgb(189, 189, 189); justify-content: center;">
-              <p style="margin: 0px; margin-top: 8px; padding: 4px; text-align: center; margin: 0px; margin-bottom: 6px;">Current page is tracked</p>
-            </div>
-            <!-- <div style="display: flex; flex-direction: column; width: 85px; align-items: center; border: 1px solid grey;">
-              <p style="margin: 0px; margin-top: 8px;">Tracked Sites</p>
-              <h1 style="margin: 0px; margin-top: 17px;">6</h1>
-            </div> -->
-          </div>
-
-          <div class="spacer"></div>
-          
-          <div class='divider'></div>
-          <h3 style="margin: 0px;">Today's Data</h3>
-
-          <div id="dayChart" style="width: 100%; height: 75px;"></div>
-
-          <div style="display: flex; flex-direction: row; height: 85px; width: 100%; margin-top: 10px; justify-content: space-evenly;">
-            <div style="display: flex; flex-direction: column; width: 85px; align-items: center; justify-content: center;border: 1px solid grey;">
-              <h2 style="margin: 0px; padding: 5px;">2 <br/><small><small>hours</small></small></h2>
-            </div>
-            <div style="display: flex; flex-direction: column; width: 85px; align-items: center; justify-content: center;border: 1px solid grey;">
-              <h2 style="margin: 0px; padding: 5px;">1 <br/><small><small>session</small></small></h2>
-            </div>
-            <div style="display: flex; flex-direction: column; width: 85px; align-items: center; justify-content: center;border: 1px solid grey;">
-              <h2 style="margin: 0px; padding: 5px;">20m <br/><small><small>avg span</small></small></h2>
-            </div>
-          </div>
-          
-        </div>
-
-
-        <div style="display: flex; display: none; flex-direction: column;">
-          <h4 class="subTitle-center">Sites that will auto track work</h4>
-          <div class="trackSites-list" id="trackSites-list">
-            <div class="trackSites-item">None..</div>
-          </div>
-          <button id="btnAddCurrentCourse" class="trackSites-add">+ Add Current Site</button>
-
-          <div class="spacer"></div>
-
-
-
-          <h4 id="identifiers-title" class="subTitle-left">Course Identifiers <small>&nbsp;&nbsp;for current site</small></h4>
-          <div id="identifiers-list" class="scrollbar-grey identifiers-list">
-            <div class="identifiers-item">
-              <input type="text" class="identifiers-courseId" value="" disabled/>
-              <span class="identifiers-seperator">&nbsp; : &nbsp;</span>
-              <div style="flex-grow: 3; width: 60%;">
-                <input class="identifiers-identifyStr" type="text"/>
+        <div style="padding: 13px">
+          <div id="homeDiv" style="display: flex; flex-direction: column;">
+            <h2 class="extension-title">
+              Study Tracker
+            </h2>
+            <div style="display: flex; flex-direction: row; height: 67px; width: 100%; margin-top: 10px; justify-content: space-evenly;">
+              <div style="display: flex; flex-direction: column; width: 85px; align-items: center; border-radius: 5px; border: 1px solid rgb(189, 189, 189);">
+                <p style="margin: 0px; margin-top: 8px;">Tracking</p>
+                <h2 id="numOfTrackSites" style="margin: 0px; margin-top: 10px; text-decoration: none;">6</h2>
+              </div>
+              <div style="display: flex; flex-direction: column; align-items: center; justify-content: center;">
+                <button id="btnToggleCurrentSite" class="" style="margin-bottom: 4px;">+ Track Site</button>
+                <button id="btnShowEdit" class="">Edit</button>
+              </div>
+              <div id="trackStatusCurrentSite-wrap" style="display: flex; flex-direction: column; width: 85px; align-items: center; border-radius: 5px; border: 1px solid rgb(129, 199, 135); justify-content: center;">
+                <p id="trackStatusCurrentSite" style="margin: 0px; margin-top: 8px; padding: 4px; text-align: center; margin: 0px; margin-bottom: 6px;">Current page is tracked</p>
               </div>
             </div>
-
-            <!-- <div class="divider"></div> -->
-
+  
+            <div class="spacer"></div>
+            <div class="spacer"></div>
+            <div class="spacer"></div>
+            <div class="spacer"></div>
+            
+            <div class='divider'></div>
+            <h3 style="margin: 0px;">Today's Data</h3>
+            
+            <div class="spacer"></div>
+            <div id="dayChart" style="width: 95%; height: 75px;"></div>
+  
+            <div style="display: flex; flex-direction: row; height: 85px; width: 100%; margin-top: 10px; justify-content: space-evenly;">
+              <div style="display: flex; flex-direction: column; width: 85px; align-items: center; justify-content: center;border: 1px solid grey;">
+                <h2 id="todayTotalHours" style="margin: 0px; padding: 5px;">99 <br/><small><small>hours</small></small></h2>
+              </div>
+              <div style="display: flex; flex-direction: column; width: 85px; align-items: center; justify-content: center;border: 1px solid grey;">
+                <h2 id="todayTotalSessions" style="margin: 0px; padding: 5px;">99 <br/><small><small>session</small></small></h2>
+              </div>
+              <div style="display: flex; flex-direction: column; width: 85px; align-items: center; justify-content: center;border: 1px solid grey;">
+                <h2 id="todayAvgSpan" style="margin: 0px; padding: 5px;">99m <br/><small><small>avg span</small></small></h2>
+              </div>
+            </div>
+            
           </div>
-
-        </div>
-        <div class="spacer" style="height: 30px;"></div>
-        <div>
-          <button class="bottomBtn" style="padding-right: 0px;">Settings</button>
-          <button class="bottomBtn">Advanced</button>
-          <button id="btnRefresh" class="bottomBtn">Refresh</button>
+  
+  
+          <div id="editDiv" style="display: flex; display: none; flex-direction: column;">
+            <div style="height: 1px; width: 100%; margin: 8px 0px 0px 0px;"></div>
+            <button id="btnExitEdit" style="width: 67px;">Back</button>
+            <h4 class="subTitle-center">Sites that will auto track work</h4>
+            <div class="trackSites-list" id="trackSites-list">
+              <div class="trackSites-item">None..</div>
+            </div>
+            <!-- <button id="btnAddCurrentCourse" class="trackSites-add">+ Add Current Site</button> -->
+  
+            <div class="spacer"></div>
+  
+  
+  
+            <h4 id="identifiers-title" class="subTitle-left">Course Identifiers <small>&nbsp;&nbsp;for all sites</small></h4>
+            <div id="identifiers-list" class="scrollbar-grey identifiers-list">
+              <div class="identifiers-item">
+                <input type="text" class="identifiers-courseId" value="" disabled/>
+                <span class="identifiers-seperator">&nbsp; : &nbsp;</span>
+                <div style="flex-grow: 3; width: 60%;">
+                  <input class="identifiers-identifyStr" type="text"/>
+                </div>
+                <button class="btn-icon">add</button>
+              </div>
+  
+              <!-- <div class="divider"></div> -->
+  
+            </div>
+  
+          </div>
+          <div class="spacer" style="height: 30px;"></div>
+          <div>
+            <!-- <button class="bottomBtn" style="padding-right: 0px;">Settings</button> -->
+            <!-- <button class="bottomBtn">Advanced</button> -->
+            <button id="btnRefresh" class="bottomBtn">Refresh</button>
+          </div>
         </div>
       </div>
 

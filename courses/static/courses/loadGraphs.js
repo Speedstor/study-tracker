@@ -451,7 +451,11 @@ function getChartData_timeBar(study_sessions, daysInBar, totalBars, chartType, e
         let dayIndex = -1
         switch(chartType){
         case "week":
-            if(todayDate.getWeek() != start.getWeek()) continue;
+            let todayDateWeek = todayDate.getWeek()
+            let startWeek = start.getWeek()
+            if(start.getDay() == 6) startWeek--
+            if(todayDate.getDay() == 6) todayDateWeek--
+            if(todayDateWeek != startWeek) continue;
             dayIndex = start.getDay()
             break;
         case "month":
@@ -472,12 +476,7 @@ function getChartData_timeBar(study_sessions, daysInBar, totalBars, chartType, e
         total_days[dayIndex] += duration
     }
     for (const [c_id, cData] of Object.entries(classData)){
-        console.log(c_id, only_courses, only_courses.includes(c_id))
         if(only_courses.length > 0 && !only_courses.includes(eval(c_id))) continue;
-        // if(allow_course_select && window.deselect_classes && (window.deselect_classes.includes(c_id))) {
-        //     chartData["data"]["columns"].push([cData.course_name, ...(new Array(Math.round(totalBars/daysInBar)).fill(0))])
-        //     continue;
-        // }
         chartData["data"]["columns"].push([cData.course_name, ...cData["total_each_day"]])
     }
 

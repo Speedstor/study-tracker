@@ -6,9 +6,8 @@ function displayBlock(elemId){
 }
 
 function prepareForDelete(course_id){
-    window.prepareForDelete_id = course_id;
-    let username = "username";
-    document.getElementById("type-to-confirm").innerHTML = username+"/"+jsData.courses[course_id].course_name
+    document.getElementById("delete-course-id").value = course_id
+    document.getElementById("type-to-confirm").innerHTML = jsData.username+"/"+jsData.courses[course_id].course_name
     displayBlock('urlModel');
 }
 function cancelDelete(){
@@ -18,8 +17,7 @@ function cancelDelete(){
 }
 
 function deleteCourse(){
-    let username = "username";
-    if(document.getElementById("type-to-confirm").value == username+"/"+jsData.courses[window.prepareForDelete_id].course_name){
+    if(document.getElementById("type-to-confirm").value == jsData.username+"/"+jsData.courses[window.prepareForDelete_id].course_name){
 
     }
 }

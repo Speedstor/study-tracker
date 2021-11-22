@@ -28,6 +28,21 @@
 
 {% include 'partials/_navbar.html' %}
 <body style="margin: 0px; ">
+    {% if notification %}
+        <div id="notification-div" style="transition: all 100ms ease-in-out; opacity: 100; position: absolute; padding: 10px; position: absolute; margin-top: 10px; left: 50%; transform: translate(-50%, 0); z-index: 2; background: #ffa6a638; border-radius: 5px; border: 1px solid #74080885;">
+            <div style="">
+                {{notification}}
+            </div>
+        </div>
+        <script>
+        setTimeout(() => {
+            document.getElementById("notification-div").style.opacity = "0";
+            setTimeout(() => {
+                document.getElementById("notification-div").style.display = "none";
+            }, 200)
+        }, 6000)
+        </script>
+    {% endif %}
     <div style="display: flex; flex-direction: row; position: relative;">
         {% block content %}{% endblock %}
     </div>

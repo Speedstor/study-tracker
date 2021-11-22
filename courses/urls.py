@@ -12,4 +12,5 @@ urlpatterns = [
     path('integrations/', views.integrations, name='integrations'),
     path('settings/', views.settings, name='settings'),
     path('analytics/', views.analytics, name='analytics'),
+    path('delete_course/', views.delete_course, name='delete_course'),
 ]

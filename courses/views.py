@@ -1,6 +1,6 @@
 from django.contrib.auth import authenticate
 from django import forms
-from django.http.response import HttpResponse
+from django.http.response import HttpResponse, HttpResponseNotFound
 from django.shortcuts import render
 from django.urls import reverse
 from django.utils import timezone
@@ -12,12 +12,13 @@ from django.forms.models import model_to_dict
 from django.core import serializers
 
 from .models import Course, StudySession
-from .forms import CourseForm
+from .forms import CourseForm, DeleteCourseForm
 from . import queries
 
 from main.settings import STUDY_SESSION_END_TIMEOUT, STUDY_SESSION_END_FORCE_SET_PING_WIGGLE_ROOM
 
 from datetime import datetime
+import math
 
 
 # View for the home page
@@ -28,7 +29,7 @@ def index(request):
     # Get this user's courses
     courses = Course.objects.all().filter(user=request.user.id)
 
-    now = datetime.utcnow()
+    now = timezone.now()
     jsData = {
         "study_sessions": [],
         "courses": {},
@@ -68,10 +69,43 @@ def detail(request, course_id):
     total_time = 0
     for s in sessions:
         total_time += s.duration
-    context = {
-        'tempString': f'You are looking at course {course.course_name}. You have spent {total_time} minutes studying for this course.'
+    
+    now = timezone.now();
+    jsData = {
+        "study_sessions": [],
+        "courses": {},
+        "username": request.user.username,
     }
-    return render(request, 'courses/placeholder.html', context=context)
+    c = course
+    c_study_sessions = queries.get_study_sessions_byType(c.id, now, "year")
+    jsData["courses"][c.id] = {
+        "id": c.id,
+        "course_name": c.course_name,
+        "date_added": str(c.date_added),
+    }
+    for ss in c_study_sessions:
+        jsData["study_sessions"].append({
+            "course_name": c.course_name,
+            "course_id": c.id,
+            'session': {
+                'id': ss.id,
+                'start_date': str(ss.start_date),
+                'end_date': str(ss.end_date),
+                'last_ping': str(ss.last_ping),
+                'duration': ss.duration
+            },
+        })
+
+    context = {
+        "course_id": course.id,
+        "course_name": course.course_name, 
+        "total_time": math.floor(total_time/360)/10,
+        "jsData": jsData,
+        "deleteForm": DeleteCourseForm()
+    }
+    if 'wrong_confirm_str' in request.GET:
+        context['notification'] = "To delete course, please type the confirm string correctly"
+    return render(request, 'courses/detail.html', context=context)
 
 
 # View for adding a new course
@@ -89,22 +123,49 @@ def add_course(request):
             c.save()
 
             # Return to home page
-            return HttpResponseRedirect(reverse('courses:index'))
+            return HttpResponseRedirect(reverse('courses:list'))
     else:
         form = CourseForm()
 
     context = {'form': form}
     return render(request, 'courses/add_course.html', context=context)
 
+# View for adding a new course
+@login_required
+def delete_course(request):
+    if request.method == 'POST':
+        form = DeleteCourseForm(request.POST)
+        if 'course_id' in request.POST and 'confirm_str' in request.POST:
+            # Create course
+            course_id = request.POST['course_id']
+            confirm_str = request.POST['confirm_str']
+            course = Course.objects.get(pk=course_id)
+            need_confirm = request.user.username+"/"+course.course_name
+            if confirm_str == need_confirm:
+                course.delete()
+                return HttpResponseRedirect("%s?delete_success=true" % reverse('courses:list'))
+            else:
+                redirectLink = reverse('courses:detail', kwargs={'course_id':course_id })
+                print(redirectLink)
+                if 'next' in request.POST:
+                    print(request.POST)
+                    redirectLink = request.POST['next']
+                    print(redirectLink)
+                return HttpResponseRedirect("%s?wrong_confirm_str=true" % redirectLink)
+        else:
+            return HttpResponseRedirect(reverse('courses:list'))
+    else:
+        return HttpResponseNotFound() 
 
 @login_required
 def list(request):
     courses = [c for c in Course.objects.all().filter(user=request.user)]
     courses = sorted(courses, key=lambda c: c.course_name)
-    now = datetime.utcnow()
+    now = timezone.now()
     jsData = {
         "study_sessions": [],
         "courses": {},
+        "username": request.user.username,
     }
     for c in courses:
         c_study_sessions = queries.get_study_sessions_byType(c.id, now, "year")
@@ -129,6 +190,10 @@ def list(request):
         'courses': courses,
         'jsData': jsData,
     }
+    if 'delete_success' in request.GET:
+        context['notification'] = "successfully deleted a course"
+    if 'wrong_confirm_str' in request.GET:
+        context['notification'] = "To delete course, please type the confirm string correctly"
     return render(request, 'courses/list.html', context=context)
 
 
@@ -136,7 +201,7 @@ def list(request):
 def integrations(request):
     courses = [c for c in Course.objects.all().filter(user=request.user)]
     courses = sorted(courses, key=lambda c: c.course_name)
-    now = datetime.utcnow()
+    now = timezone.now()
     jsData = {
         "study_sessions": [],
         "courses": {},
@@ -158,7 +223,6 @@ def integrations(request):
 # View for a study session with timer
 @login_required
 def session(request):
-    print('old session called')
     # Get all of the courses to display in the <select> dropdown
     courses = [c for c in Course.objects.all().filter(user=request.user)]
     courses = sorted(courses, key=lambda c: c.course_name)
@@ -212,7 +276,7 @@ pp = pprint.PrettyPrinter(indent=4)
 def analytics(request):
     courses = [c for c in Course.objects.all().filter(user=request.user)]
     courses = sorted(courses, key=lambda c: c.course_name)
-    now = datetime.utcnow();
+    now = timezone.now();
     jsData = {
         "study_sessions": [],
         "courses": {},

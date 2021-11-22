@@ -11,7 +11,6 @@ class ExtensionTrackSites(models.Model):
         return self.siteUrl
 
 class ExtensionIdentifierStr(models.Model):
-    trackSite = models.ForeignKey(ExtensionTrackSites, on_delete=models.CASCADE)
     course = models.ForeignKey(Course, on_delete=models.CASCADE)
     identifierStr = models.CharField(max_length=200)
 
