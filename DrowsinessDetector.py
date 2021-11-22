@@ -1,3 +1,5 @@
+# Used https://www.youtube.com/watch?v=OCJSJ-anywc&t=309s as reference on how to approach developing this system.
+
 import cv2
 import dlib
 import time
