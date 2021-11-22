@@ -3,7 +3,7 @@
 {% block page-title %}Add Course{% endblock %}
 {% block content %}
 {% include 'partials/_sidebar.html' %}
-<form action="{% url 'courses:add_course' %}" method="post">
+<form action="{% url 'courses:add_course' %}" method="post" style="flex-grow: 2;">
     {% csrf_token %}
     {{ form }}
     <input type="submit" value="Add course">
