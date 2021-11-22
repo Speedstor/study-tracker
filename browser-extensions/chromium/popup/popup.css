@@ -127,7 +127,7 @@ div.divider{
     border: 1px solid grey;
     border-radius: 10px;
     margin-top: 5px;
-    max-height: 79px;
+    max-height: 95px;
     overflow-y: auto;
 }
 
@@ -136,6 +136,10 @@ div.divider{
     font-family: sans-serif;
     font-size: 15px;
     padding: 4px 15px;
+}
+
+.trackSites-item:hover{
+  background: rgba(146, 146, 146, 0.219);
 }
 
 .trackSites-add {

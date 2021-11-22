@@ -6,13 +6,13 @@
     <a class="sideBarLink" href="{% url 'courses:analytics' %}"><span class="icon-emoji">📈</span> Analytics</a>
     <a class="sideBarLink" href="{% url 'courses:integrations' %}"><span class="icon-emoji">🔗</span> Integration</a>
     <a class="sideBarLink" href="{% url 'courses:list' %}"><span class="icon-emoji">📝</span> Edit Courses</a>
-    <a class="sideBarLink" href="{% url 'courses:settings' %}"><span class="icon-emoji">⚙</span> Settings</a>
+    {% comment %} <a class="sideBarLink" href="{% url 'courses:settings' %}"><span class="icon-emoji">⚙</span> Settings</a> {% endcomment %}
     <div style="flex-grow: 3;"></div>
-    <div class="box" style="background: white; margin: 10px;">
+    {% comment %} <div class="box" style="background: white; margin: 10px;">
         <ul style="list-style-type: none;">
             <li>wpm: 99wpm</li>
             <li>time spent: 4h</li>
         </ul>
         <div id="increaseGauge"></div>
-    </div>
+    </div> {% endcomment %}
 </div>

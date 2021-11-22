@@ -160,7 +160,7 @@ def checkLogin(request):
 @csrf_exempt
 def ping(request):
     if request.method == 'POST':
-        if not request.session.get('course_id', None):
+        if 'course_id' not in request.POST:
             return CORS_JsonResponse(status=401, data={'status': "need course_id parameter payload"})
 
         ongoing_session = None
@@ -180,10 +180,12 @@ def ping(request):
         except:
             pass # the user does not have any session yet, and it would have error when fetching
             
-        print("request.session['changeSessionCourse'] : " + str(request.session['changeSessionCourse']))
-
+        if 'changeSessionCourse' not in request.session:
+            request.session['changeSessionCourse'] = -1
         course_id = request.POST['course_id']
-        last_course_id = request.session['course_id']
+        last_course_id = None
+        if 'course_id' in request.session:
+            last_course_id = request.session['course_id']
         if ongoing_session != None:
             if (ongoing_session.course.id == last_course_id):
                 ongoing_session.last_ping = timezone.localtime(timezone.now())

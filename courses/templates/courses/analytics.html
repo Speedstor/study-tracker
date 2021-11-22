@@ -35,7 +35,7 @@
                         {% endif %}
                     </div>
                     <div style="display: flex; flex-direction: row; padding: 8px; justify-content: space-around; flex-grow: 2;">
-                        <div style="display: flex; flex-direction: column; padding: 8px; justify-content: space-between; flex-grow: 2;">
+                        {% comment %} <div style="display: flex; flex-direction: column; padding: 8px; justify-content: space-between; flex-grow: 2;">
                             <div>wpm: 40wpm</div>
                             <div>wpm: 40wpm</div>
                             <div>wpm: 40wpm</div>
@@ -44,41 +44,41 @@
                             <div>wpm: 40wpm</div>
                             <div>wpm: 40wpm</div>
                             <div>wpm: 40wpm</div>
-                        </div>
+                        </div> {% endcomment %}
                     </div>
                 </div>
                 {% comment %} <div class="hover-grab" id="moveWhiteboard" style="position: absolute; bottom: -4px; right: 2px;"><p class="sub">✊ drag to move</p></div> {% endcomment %}
                 
                 <div style="display: flex; flex-wrap: wrap; flex-direction: column; padding: 8px;">
                 <div style="display: flex; justify-content: space-around; flex-grow: 3; flex-wrap: wrap;">
-                    <div class="box dashboard-graphWeek" id="graphWeek" style="padding: 10px 16px 0px 0px; display: flex; flex-direction: column; max-height: 250px; max-width: 800px; min-width: 450px; width: 47%; height: 230px; margin-top: 4px;">
+                    <div class="box dashboard-graphWeek" id="graphWeek" style="padding: 10px 16px 0px 0px; display: flex; flex-direction: column; max-height: 250px; max-width: 800px; min-width: 450px; width: 31%; height: 230px; margin-top: 4px;">
                         <h6 class="no-margin center" style="position: absolute; padding-left: 51px;">This week</h6>
                         <div id="weekChart" style="height: 100%;"></div>
                     </div>
-                    <div class="box dashboard-graphToday" id="graphToday" style="padding: 10px 16px 0px 0px; display: flex; flex-direction: column; max-height: 250px; max-width: 800px; min-width: 450px; width: 47%; height: 230px; margin-top: 4px;">
+                    <div class="box dashboard-graphToday" id="graphToday" style="padding: 10px 16px 0px 0px; display: flex; flex-direction: column; max-height: 250px; max-width: 800px; min-width: 450px; width: 31%; height: 230px; margin-top: 4px;">
                         <h6 class="no-margin center" style="position: absolute; padding-left: 86px;">Today</h6>
                         <div id="dayChart" style="height: 100%;"></div>
                     </div>
-                    <div class="box dashboard-graphWeek" id="graphMonth" style="padding: 10px 16px 0px 0px; display: flex; flex-direction: column; max-height: 250px; max-width: 800px; min-width: 450px; width: 47%; height: 230px; margin-top: 4px;">
+                    <div class="box dashboard-graphWeek" id="graphMonth" style="padding: 10px 16px 0px 0px; display: flex; flex-direction: column; max-height: 250px; max-width: 800px; min-width: 450px; width: 31%; height: 230px; margin-top: 4px;">
                         <h6 class="no-margin center" style="position: absolute; padding-left: 51px;">This Month</h6>
                         <div id="monthChart" style="height: 100%;"></div>
                     </div>
-                    <div class="box dashboard-graphWeek" id="graphToday" style="padding: 10px 16px 0px 0px; display: flex; flex-direction: column; max-height: 250px; max-width: 800px; min-width: 450px; width: 47%; height: 230px; margin-top: 4px;">
+                    {% comment %} <div class="box dashboard-graphWeek" id="graphToday" style="padding: 10px 16px 0px 0px; display: flex; flex-direction: column; max-height: 250px; max-width: 800px; min-width: 450px; width: 31%; height: 230px; margin-top: 4px;">
                         <h6 class="no-margin center" style="position: absolute; padding-left: 51px;">This Year</h6>
                         <div id="yearChart" style="height: 100%;"></div>
-                    </div>
-                    <div class="box dashboard-graphToday" id="graphToday" style="position: relative; padding: 10px 16px 0px 16px; display: flex; flex-direction: row; max-height: 250px; max-width: 800px; min-width: 450px; width: 47%; height: 230px; margin-top: 4px;">
+                    </div> {% endcomment %}
+                    <div class="box dashboard-graphToday" id="graphToday" style="position: relative; padding: 10px 16px 0px 16px; display: flex; flex-direction: row; max-height: 250px; max-width: 800px; min-width: 450px; width: 31%; height: 230px; margin-top: 4px;">
                         {% comment %} <h6 class="no-margin center" style="position: absolute; right: 20px;">Time Spent</h6> {% endcomment %}
                         <h6 class="no-margin center" style="position: absolute; padding-left: 2px;">Time Spent</h6>
                         <div id="coursePiChart-year" style="height: 100%; flex-grow: 8; display: flex; justify-content: center; align-items: center;"></div>
                         <div id="coursePiChart-month" style="height: 100%; flex-grow: 9; display: flex; justify-content: center; align-items: center;"></div>
                         <div id="coursePiChart-week" style="height: 100%; flex-grow: 10; display: flex; justify-content: center; align-items: center;"></div>
                     </div>
-                    <div class="box dashboard-graphToday" id="graphToday" style="padding: 10px 16px 0px 0px; display: flex; flex-direction: column; max-height: 250px; max-width: 800px; min-width: 450px; width: 47%; height: 230px; margin-top: 4px;">
+                    <div class="box dashboard-graphToday" id="graphToday" style="padding: 10px 16px 0px 0px; display: flex; flex-direction: column; max-height: 250px; max-width: 800px; min-width: 450px; width: 31%; height: 230px; margin-top: 4px;">
                         <h6 class="no-margin center" style="position: absolute; padding-left: 20px;">Performance</h6>
                         <div id="skillsRadarChart" style="height: 100%;"></div>
                     </div>
-                    <div class="box dashboard-graphToday" id="graphToday" style="padding: 10px 16px 0px 0px; display: flex; flex-direction: column; max-height: 250px; max-width: 800px; min-width: 450px; width: 47%; height: 230px; margin-top: 4px;">
+                    <div class="box dashboard-graphToday" id="graphToday" style="padding: 10px 16px 0px 0px; display: flex; flex-direction: column; max-height: 250px; max-width: 800px; min-width: 450px; width: 31%; height: 230px; margin-top: 4px;">
                         <h6 class="no-margin center" style="position: absolute; padding-left: 86px;">Study duration VS. Time of Day</h6>
                         <div id="durationTimeScatterChart" style="height: 100%;"></div>
                     </div>

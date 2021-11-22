@@ -20,7 +20,7 @@
                         <th scope="col">id</th>
                         <th scope="col">Course Name</th>
                         <th scope="col" style="width: 50px;">Edit</th>
-                        <th scope="col" style="width: 50px;">Archive</th>
+                        {% comment %} <th scope="col" style="width: 50px;">Archive</th> {% endcomment %}
                         <th scope="col" style="width: 50px;">Delete</th>
                         </tr>
                     </thead>
@@ -30,7 +30,7 @@
                             <th scope="row">{{c.id}}</th>
                             <td><a href="/courses/{{ c.id }}/">{{ c.course_name }}</a></td>
                             <td style="text-align: center;"><a href="{% url 'courses:detail' c.id %}?skipToEdit=true" class="btn btn-icon">📝</a></td>
-                            <td style="text-align: center;"><button class="btn btn-icon">✉</button></td>
+                            {% comment %} <td style="text-align: center;"><button class="btn btn-icon">✉</button></td> {% endcomment %}
                             <td style="text-align: center;"><button onclick="prepareForDelete({{c.id}});" class="btn btn-icon">➖</button></td>
                             </tr>
                         {% endfor %}

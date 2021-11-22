@@ -94,6 +94,10 @@ window.addEventListener("load", () => {
         chrome.storage.sync.set({
           trackSites: window.trackSites,
         })
+        chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
+          console.log(tabs)
+          chrome.tabs.sendMessage(tabs[0].id, { type: "startTracking"} );
+        });
       })
     }
   }
@@ -114,16 +118,21 @@ window.addEventListener("load", () => {
           return;
         }
 
+
         for(let i = 0; i < window.trackSites.length; i++){
-          if(trackSites[i] == siteUrl){
-            window.trackSites.pop(i);
+          if(window.trackSites[i] == siteUrl){
+            window.trackSites.splice(i, 1);
           }
         }
-        updateTrackSites(window.trackSites, siteUrl) 
+        updateTrackSites(window.trackSites, window.currentSite) 
         updateHomepage()
         chrome.storage.sync.set({
           trackSites: window.trackSites,
         })
+        chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
+          console.log(tabs)
+          chrome.tabs.sendMessage(tabs[0].id, { type: "stopTracking"} );
+        });
       })
     }
   }
@@ -218,6 +227,11 @@ window.addEventListener("load", () => {
     })
   }
 
+  function goToUrl(url){
+    chrome.tabs.create({url: "http://"+url});
+    // window.location.href = "http://"+url
+  }
+
   function updateTrackSites(trackSitesArr, currentSite = null){
     let trackSitesDiv = document.getElementById("trackSites-list");
     trackSitesDiv.innerHTML = "";
@@ -229,6 +243,9 @@ window.addEventListener("load", () => {
         trackSiteItem.innerHTML = siteHostname+"&nbsp;&nbsp; <small><small>(current)</small></small>";
         scrollTo = trackSiteItem
       }else trackSiteItem.innerHTML = siteHostname
+      trackSiteItem.addEventListener("click", () => {
+        goToUrl(siteHostname)
+      })
       trackSitesDiv.appendChild(trackSiteItem)
     }
     if(trackSitesArr.length == 0){
@@ -241,7 +258,6 @@ window.addEventListener("load", () => {
     }
     if(scrollTo != null){
       scrollTo.scrollIntoView();
-      // trackSitesDiv.scrollTo(scrollTo)
     }
   }
 

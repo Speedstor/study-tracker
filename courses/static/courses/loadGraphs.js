@@ -61,6 +61,9 @@ const dayChart_chartData = {
     legend: {
         show: false
     },
+    interaction: {
+      enabled: false,
+    },
 }
 const coursePi_chartData = {
     data: {
