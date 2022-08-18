@@ -1,5 +1,5 @@
 # Study Tracker
-#### UCSD IEEE Competition - `Most Technical: Team 27`
+#### UCSD IEEE Competition - `Most Technical Award: Team 27`
 ![](screenshot.png)  
 Project repository for team 27
 ```
