@@ -1,6 +1,10 @@
 # Study Tracker
 #### UCSD IEEE Competition - `Most Technical Award: Team 27`
 ![](screenshot.png)  
+
+## Chrome Extension
+![](browser-extensions/screenshot.png)  
+
 Project repository for team 27
 ```
 this project lost traction over time. Archived for now.
@@ -22,9 +26,6 @@ First, it allows users to easily log the amount of time they spend doing work fo
 
 Second, the app will periodically remind users to take a break by detecting whether the user is drowsy. This drowsiness detection feature is meant to prevent users from getting burnt out from doing work when they are tired and unproductive.
 
-
-## Chrome Extension
-![](browser-extensions/screenshot.png)  
 
 ## Todo
 - [ ] integrations
